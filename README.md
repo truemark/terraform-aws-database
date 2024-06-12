@@ -1,10 +1,16 @@
-# AWS Databases
+# TrueMark AWS Database Module
 
-This terraform module creates an aws database instance that you specify.
+A set of terraform modules to create databases and related resources in AWS.
 
-## Quick Links
- * [AWS Terraform Documentation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
+## Usage
 
-## Example Usage
-```
-None
+Each submodule has it's own usage pattern. Please refer to the README.md in each submodule for more information.
+
+| Module                                                    |                                       |
+|-----------------------------------------------------------|---------------------------------------|
+| [Aurora PostgresSQL](./modules/aurora-postgres/README.md) | [Example](./examples/aurora-postgres) |
+| [Microsoft SQL Server](./modules/mssql/README.md)         | [Example](./examples/mssql)           |
+
+
+## Related Links
+ - [TrueMark](https://truemark.io)
