@@ -1,0 +1,87 @@
+# terraform-aws-rds-postgres-alarms
+This repo defines AWS RDS postgres specific alarm definitions (not Aurora). These alarms monitor postgres replication between master and replica.
+
+Each alarm listed below is created by default. Creation can be disabled by setting the associated alarm create parameter to false. For example, to not create the alarm replica_db_load_anomaly, set the parameter create_replica_db_load_anomaly_alarm to false.
+
+Threshold alarms are included. Anomaly alarm creation can be disabled by setting the variable create_anomaly_alarms to false.
+
+
+- master_checkpoint_lag_anomaly_alarm
+- master_checkpoint_lag_high_alarm
+- master_cpu_utilization_high_alarm
+- master_cpu_utilization_anomaly_alarm
+- master_checkpoint_lag_anomaly_alarm
+- master_checkpoint_lag_high_alarm
+- master_cpu_utilization_anomaly_alarm
+- master_cpu_utilization_high_alarm
+- master_db_connections_anomaly_alarm
+- master_db_connections_high_alarm
+- master_db_load_anomaly_alarm
+- master_db_load_cpu_anomaly_alarm
+- master_db_load_non_cpu_anomaly_alarm
+- master_disk_queue_depth_anomaly_alarm
+- master_disk_queue_depth_high_alarm
+- master_free_storage_space_anomaly_alarm
+- master_free_storage_space_low_alarm
+- master_freeable_memory_anomaly_alarm
+- master_freeable_memory_low_alarm
+- master_local_storage_pct_low_alarm
+- master_maximum_used_transaction_ids_high_alarm
+- master_network_receive_throughput_anomaly_alarm
+- master_network_transmit_throughput_anomaly_alarm
+- master_oldest_replication_slot_lag_anomaly_alarm
+- master_read_iops_anomaly_alarm
+- master_read_iops_high_alarm
+- master_read_latency_anomaly_alarm
+- master_read_latency_high_alarm
+- master_read_throughput_anomaly_alarm
+- master_swap_usage_anomaly_alarm
+- master_swap_usage_high_alarm
+- master_transaction_logs_disk_usage_high_alarm
+- master_transaction_logs_generation_anomaly_alarm
+- master_transaction_logs_generation_high_alarm
+- master_write_iops_anomaly_alarm
+- master_write_iops_high_alarm
+- master_write_latency_anomaly_alarm
+- master_write_latency_high_alarm
+- master_write_throughput_anomaly_alarm
+- replica_checkpoint_lag_anomaly_alarm
+- replica_checkpoint_lag_high_alarm
+- replica_cpu_utilization_high_alarm
+- replica_cpu_utilization_high_anomaly_alarm
+- replica_db_connections_anomaly_alarm
+- replica_db_connections_high_alarm
+- replica_db_connections_high_anomaly_alarm
+- replica_db_load_anomaly_alarm
+- replica_db_load_cpu_anomaly_alarm
+- replica_db_load_high_anomaly_alarm
+- replica_db_load_non_cpu_anomaly_alarm
+- replica_db_non_load_cpu_anomaly_alarm
+- replica_disk_queue_depth_anomaly_alarm
+- replica_disk_queue_depth_high_alarm
+- replica_free_storage_space_anomaly_alarm
+- replica_free_storage_space_low_alarm
+- replica_freeable_memory_anomaly_alarm
+- replica_freeable_memory_low_alarm
+- replica_lag_high_alarm
+- replica_local_storage_pct_low_alarm
+- replica_maximum_used_transaction_ids_anomaly_alarm
+- replica_maximum_used_transaction_ids_high_alarm
+- replica_network_receive_throughput_anomaly_alarm
+- replica_network_transmit_throughput_anomaly_alarm
+- replica_oldest_replication_slot_lag_anomaly_alarm
+- replica_read_iops_anomaly_alarm
+- replica_read_iops_high_alarm
+- replica_read_latency_anomaly_alarm
+- replica_read_latency_high_alarm
+- replica_read_throughput_anomaly_alarm
+- replica_swap_usage_anomaly_alarm
+- replica_swap_usage_high_alarm
+- replica_transaction_logs_disk_usage_anomaly_alarm
+- replica_transaction_logs_disk_usage_high_alarm
+- replica_transaction_logs_generation_anomaly_alarm
+- replica_write_iops_anomaly_alarm
+- replica_write_iops_high_alarm
+- replica_write_latency_anomaly_alarm
+- replica_write_latency_high_alarm
+- replica_write_throughput_anomaly_alarm

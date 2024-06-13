@@ -1,0 +1,117 @@
+groups:
+- name: Oracle Database Alerts
+  rules:
+  %{~ if alert_database_down == true ~}
+  - alert: OracleDatabaseDown
+    expr: oracledb_up{databaseIdentifier="${database_identifier}"} == 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: Oracle database is down
+      description: The Oracle database identified by `{{ $labels.databaseIdentifier }}` is currently down.
+  %{~ endif ~}
+  %{~ if alert_warning_blocking_sessions_count != null ~}
+  - alert: OracleBlockingCount
+    expr: oracledb_blocking_count{databaseIdentifier="${database_identifier}"} > ${alert_warning_blocking_sessions_count}
+    for: 15m
+    labels:
+      severity: warning
+    annotations:
+      summary: High Blocking Sessions Count Warning
+      description: Blocking sessions count on Oracle database `{{ $labels.databaseIdentifier }}` is currently high with `{{ $value | humanize }}` sessions.
+  %{~ endif ~}
+  %{~ if alert_critical_blocking_sessions_count != null ~}
+  - alert: OracleBlockingCount
+    expr: oracledb_blocking_count{databaseIdentifier="${database_identifier}"} > ${alert_critical_blocking_sessions_count}
+    for: 15m
+    labels:
+      severity: critical
+    annotations:
+      summary: High Blocking Sessions Count Critical
+      description: Blocking sessions count on Oracle database `{{ $labels.databaseIdentifier }}` is currently high with `{{ $value | humanize }}` sessions.
+  %{~ endif ~}
+  %{~ if alert_warning_tablespace_used_percent_global != null ~}
+  - alert: OracleTableSpaceHighUsage
+    expr: oracledb_tablespace_used_percent{type!="TEMPORARY", databaseIdentifier="${database_identifier}"} > ${alert_warning_tablespace_used_percent_global}
+    for: 0s
+    labels:
+      severity: warning
+    annotations:
+      summary: High Tablespace Usage Warning
+      description: The tablespace {{ $labels.tablespace }} on the Oracle DB instance {{ $labels.databaseIdentifier }} is currently using more than ${alert_warning_tablespace_used_percent_global}% of its capacity. Current usage {{ $value | humanize }}.
+  %{~ endif ~}
+  %{~ if alert_critical_tablespace_used_percent_global != null ~}
+  - alert: OracleTableSpaceHighUsage
+    expr: oracledb_tablespace_used_percent{type!="TEMPORARY", databaseIdentifier="${database_identifier}"} > ${alert_critical_tablespace_used_percent_global}
+    for: 0s
+    labels:
+      severity: critical
+    annotations:
+      summary: High Tablespace Usage Critical
+      description: The tablespace {{ $labels.tablespace }} on the Oracle DB instance {{ $labels.databaseIdentifier }} is currently using more than ${alert_critical_tablespace_used_percent_global}% of its capacity. Current usage {{ $value | humanize }}.
+  %{~ endif ~}
+  %{~ if alert_warning_tablespace_used_percent != null ~}
+  %{~ for tablespace, threshold in alert_warning_tablespace_used_percent ~}
+  - alert: OracleTableSpaceHighUsage
+    expr: oracledb_tablespace_used_percent{type!="TEMPORARY", databaseIdentifier="${database_identifier}", tablespace=~"${tablespace}"} > ${threshold}
+    for: 0s
+    labels:
+      severity: warning
+    annotations:
+      summary: High Table Space Usage in Oracle Database
+      description: The tablespace on the Oracle DB instance `{{ $labels.databaseIdentifier }}` has usage above ${threshold}%, specifically in `{{ $labels.tablespace }}`. Current usage `{{ $value | humanize }}`.
+  %{~ endfor ~}
+  %{~ endif ~}
+  %{~ if alert_critical_tablespace_used_percent != null ~}
+  %{~ for tablespace, threshold in alert_critical_tablespace_used_percent ~}
+  - alert: OracleTableSpaceHighUsage
+    expr: oracledb_tablespace_used_percent{type!="TEMPORARY", databaseIdentifier="${database_identifier}", tablespace=~"${tablespace}"} > ${threshold}
+    for: 0s
+    labels:
+      severity: critical
+    annotations:
+      summary: High Table Space Usage in Oracle Database
+      description: The tablespace on the Oracle DB instance `{{ $labels.databaseIdentifier }}` has usage above ${threshold}%, specifically in `{{ $labels.tablespace }}`. Current usage `{{ $value | humanize }}`.
+  %{~ endfor ~}
+  %{~ endif ~}
+  %{~ if alert_warning_session_utilization_percent != null ~}
+  - alert: OracleSessionHighUtilization
+    expr: oracledb_sessions_utilization_percent{databaseIdentifier="${database_identifier}"} > ${alert_warning_session_utilization_percent}
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: High Session Utilization in Oracle Database
+      description: On the Oracle Database `{{ $labels.databaseIdentifier }}`, the session utilization percentage is high. Current utilization `{{ $value | humanize }}`.
+  %{~ endif ~}
+  %{~ if alert_critical_session_utilization_percent != null ~}
+  - alert: OracleSessionHighUtilization
+    expr: oracledb_sessions_utilization_percent{databaseIdentifier="${database_identifier}"} > ${alert_critical_session_utilization_percent}
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: High Session Utilization in Oracle Database
+      description: On the Oracle Database `{{ $labels.databaseIdentifier }}`, the session utilization percentage is critically high. Current utilization `{{ $value | humanize }}`.
+  %{~ endif ~}
+  %{~ if alert_warning_recovery_file_destination_used_percent != null ~}
+  - alert: OracleRecoveryFileDestinationUsageHigh
+    expr: oracledb_recovery_file_dest_perc_used{databaseIdentifier="${database_identifier}"} > ${alert_warning_recovery_file_destination_used_percent}
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: High Recovery percentage usage
+      description: On Database `{{ $labels.databaseIdentifier }}`, recovery space utilization percentage is high. Current Utilization `{{ $value | humanize }}`
+  %{~ endif ~}
+  %{~ if alert_critical_recovery_file_destination_used_percent != null ~}
+  - alert: OracleRecoveryFileDestinationUsageHigh
+    expr: oracledb_recovery_file_dest_perc_used{databaseIdentifier="${database_identifier}"} > ${alert_critical_recovery_file_destination_used_percent}
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: High Recovery percentage usage
+      description: On Database `{{ $labels.databaseIdentifier }}`, recovery space utilization percentage is high. Current Utilization `{{ $value | humanize }}`
+  %{~ endif ~}
