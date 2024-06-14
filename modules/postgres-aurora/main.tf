@@ -6,7 +6,7 @@ locals {
   tags = merge(var.tags,
     {
       "automation:component-id"     = "rds-aurora-postgres",
-      "automation:component-url"    = "https://registry.terraform.io/modules/truemark/rds-aurora-postgres/aws/latest",
+      "automation:component-url"    = "https://registry.terraform.io/modules/truemark/database/aws/latest/submodules/aurora-postgres",
       "automation:component-vendor" = "TrueMark",
       "backup:policy"               = "default-week",
   })
@@ -102,7 +102,7 @@ module "db" {
   snapshot_identifier                    = var.snapshot_identifier
   storage_encrypted                      = true
   subnets                                = var.subnets
-  tags                                   = var.tags
+  tags                                   = local.tags
   vpc_id                                 = var.vpc_id
 }
 
@@ -110,14 +110,14 @@ resource "aws_ram_resource_share" "db" {
   count                     = var.create && var.share ? 1 : 0
   name                      = "${var.name}-rds"
   allow_external_principals = false
-  tags                      = merge(var.tags, var.share_tags)
+  tags                      = merge(local.tags, var.share_tags)
 }
 
 resource "aws_secretsmanager_secret" "db" {
   count       = var.create && var.manage_master_user_password ? 0 : 1
   name_prefix = var.master_password_secret_name_prefix == null ? "database/${var.name}/master-" : var.master_password_secret_name_prefix
   description = "Master password for ${var.name}"
-  tags        = merge(var.tags, var.password_secret_tags)
+  tags        = merge(local.tags, var.password_secret_tags)
 
 }
 
@@ -145,8 +145,8 @@ resource "random_password" "master_password" {
 
 module "proxy" {
   count                 = var.create && var.create_proxy ? 1 : 0
-  source                = "truemark/rds-proxy/aws"
-  version               = "0.0.1"
+  source                = "truemark/database/aws//modules/proxy"
+  version               = "0.0.4"
   create_proxy          = var.create_proxy
   name                  = var.name
   secret_arns           = concat([aws_secretsmanager_secret.db[count.index].arn], var.proxy_secret_arns)

@@ -11,8 +11,8 @@ and the ability to create an optional RDS proxy.
 ## Example Usage
 ```
 module "db" {
-  source                          = "truemark/rds-aurora-postgres/aws"
-  version                         = "1.2.1"
+  source                          = "truemark/database/aws//modules/aurora-postgres"
+  version                         = "0.0.4"
   database_name                   = "dbname"
   deletion_protection             = true
   engine_version                  = "14.6"
