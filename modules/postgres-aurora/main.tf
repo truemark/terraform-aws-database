@@ -102,7 +102,7 @@ module "db" {
   snapshot_identifier                    = var.snapshot_identifier
   storage_encrypted                      = true
   subnets                                = var.subnets
-  tags                                   = var.tags
+  tags                                   = local.tags
   vpc_id                                 = var.vpc_id
 }
 
@@ -110,14 +110,14 @@ resource "aws_ram_resource_share" "db" {
   count                     = var.create && var.share ? 1 : 0
   name                      = "${var.name}-rds"
   allow_external_principals = false
-  tags                      = merge(var.tags, var.share_tags)
+  tags                      = merge(local.tags, var.share_tags)
 }
 
 resource "aws_secretsmanager_secret" "db" {
   count       = var.create && var.manage_master_user_password ? 0 : 1
   name_prefix = var.master_password_secret_name_prefix == null ? "database/${var.name}/master-" : var.master_password_secret_name_prefix
   description = "Master password for ${var.name}"
-  tags        = merge(var.tags, var.password_secret_tags)
+  tags        = merge(local.tags, var.password_secret_tags)
 
 }
 
