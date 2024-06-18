@@ -140,7 +140,7 @@ resource "aws_db_proxy_default_target_group" "proxy" {
     session_pinning_filters      = var.session_pinning_filters
   }
 }
-# Hello Jim
+
 # TODO Creating the proxy errors because the DB is still in a CREATING state, we need to wait for it
 # TODO https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep
 resource "aws_db_proxy_target" "proxy" {

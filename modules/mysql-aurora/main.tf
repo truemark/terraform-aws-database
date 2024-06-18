@@ -141,9 +141,7 @@ resource "random_password" "root_password" {
 
 module "proxy" {
   count                 = var.create && var.create_proxy ? 1 : 0
-  #source                = "truemark/rds-proxy/aws"
-  #version               = "0.0.1"
-  source = "../proxy"
+  source                = "../proxy"
   create_proxy          = var.create_proxy
   name                  = var.name
   secret_arns           = concat([aws_secretsmanager_secret.db[count.index].arn], var.proxy_secret_arns)

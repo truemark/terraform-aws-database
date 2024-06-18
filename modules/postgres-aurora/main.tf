@@ -145,8 +145,7 @@ resource "random_password" "master_password" {
 
 module "proxy" {
   count                 = var.create && var.create_proxy ? 1 : 0
-  source                = "truemark/database/aws//modules/proxy"
-  version               = "0.0.4"
+  source                = "../proxy"
   create_proxy          = var.create_proxy
   name                  = var.name
   secret_arns           = concat([aws_secretsmanager_secret.db[count.index].arn], var.proxy_secret_arns)
