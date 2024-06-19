@@ -57,7 +57,7 @@ module "db" {
   license_model               = var.license_model
   maintenance_window          = var.preferred_maintenance_window
   major_engine_version        = var.major_engine_version
-  manage_master_user_password = false # not supported in custom
+  #manage_master_user_password = false # not supported in custom
   option_group_name           = var.instance_name
   options                     = var.db_options
   option_group_description    = var.option_group_description
