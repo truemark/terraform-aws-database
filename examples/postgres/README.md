@@ -9,8 +9,8 @@ This terraform module creates a provisioned RDS instance with PostgreSQL compati
 ## Example Usage
 ```
 module "db" {
-  source                       = "truemark/rds-postgres/aws"
-  version                      = "1.0.1"
+  source                       = "truemark/database/aws//modules/postgres"
+  version                      = "0.0.9"
 
   allocated_storage            = 20
   engine_version               = "16.2"
