@@ -1,7 +1,11 @@
+locals {
+  create_replica = var.replica_db_instance_id != "" ? true : false
+}
+
 #------------------------------------------------------------------------------
 # Single instance replica threshold alarms
 resource "aws_cloudwatch_metric_alarm" "replica_cpu_utilization_high" {
-  count                     = var.create_replica_cpu_utilization_high_alarm ? 1 : 0
+  count                     = local.create_replica && var.create_replica_cpu_utilization_high_alarm ? 1 : 0
   alarm_name                = "${var.replica_db_instance_id}_cpu_utilization_high_static"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["CPUUtilizationEvaluationPeriods"]
@@ -22,7 +26,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_cpu_utilization_high" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "replica_db_connections_high" {
-  count                     = var.create_replica_db_connections_high_alarm ? 1 : 0
+  count                     = local.create_replica && var.create_replica_db_connections_high_alarm ? 1 : 0
   alarm_name                = "${var.replica_db_instance_id}_db_connections_high_static"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["DatabaseConnectionsEvaluationPeriods"]
@@ -43,7 +47,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_db_connections_high" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "replica_disk_queue_depth_high" {
-  count                     = var.create_replica_disk_queue_depth_high_alarm ? 1 : 0
+  count                     = local.create_replica && var.create_replica_disk_queue_depth_high_alarm ? 1 : 0
   alarm_name                = "${var.replica_db_instance_id}_disk_queue_depth_high_static"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["DiskQueueDepthEvaluationPeriods"]
@@ -64,7 +68,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_disk_queue_depth_high" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "replica_freeable_memory_low" {
-  count                     = var.create_replica_freeable_memory_low_alarm ? 1 : 0
+  count                     = local.create_replica && var.create_replica_freeable_memory_low_alarm ? 1 : 0
   alarm_name                = "${var.replica_db_instance_id}_freeable_memory_low_static"
   comparison_operator       = "LessThanThreshold"
   evaluation_periods        = local.thresholds["FreeableMemoryEvaluationPeriods"]
@@ -85,7 +89,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_freeable_memory_low" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "replica_free_storage_space_low" {
-  count               = var.create_replica_free_storage_space_low_alarm ? 1 : 0
+  count               = local.create_replica && var.create_replica_free_storage_space_low_alarm ? 1 : 0
   alarm_name          = "${var.replica_db_instance_id}_free_storage_space_low_static"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = local.thresholds["FreeStorageSpaceEvaluationPeriods"]
@@ -104,7 +108,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_free_storage_space_low" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "replica_swap_usage_high" {
-  count                     = var.create_replica_swap_usage_high_alarm ? 1 : 0
+  count                     = local.create_replica && var.create_replica_swap_usage_high_alarm ? 1 : 0
   alarm_name                = "${var.replica_db_instance_id}_swap_usage_high_static"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["SwapUsageEvaluationPeriods"]
@@ -125,7 +129,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_swap_usage_high" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "replica_local_storage_pct_low" {
-  count                     = var.create_replica_local_storage_pct_low_alarm ? 1 : 0
+  count                     = local.create_replica && var.create_replica_local_storage_pct_low_alarm ? 1 : 0
   alarm_name                = "${var.replica_db_instance_id}_local_storage_pct_low_static"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["LocalStoragePctEvaluationPeriods"]
@@ -146,7 +150,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_local_storage_pct_low" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "replica_lag_high" {
-  count                     = var.create_replica_lag_high_alarm ? 1 : 0
+  count                     = local.create_replica && var.create_replica_lag_high_alarm ? 1 : 0
   alarm_name                = "${var.replica_db_instance_id}_lag_high_static"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["ReplicaLagEvaluationPeriods"]
@@ -167,7 +171,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_lag_high" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "replica_read_iops_high" {
-  count                     = var.create_replica_read_iops_high_alarm ? 1 : 0
+  count                     = local.create_replica && var.create_replica_read_iops_high_alarm ? 1 : 0
   alarm_name                = "${var.replica_db_instance_id}_read_iops_high_static"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["ReadIOPSEvaluationPeriods"]
@@ -188,7 +192,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_read_iops_high" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "replica_write_iops_high" {
-  count                     = var.create_replica_write_iops_high_alarm ? 1 : 0
+  count                     = local.create_replica && var.create_replica_write_iops_high_alarm ? 1 : 0
   alarm_name                = "${var.replica_db_instance_id}_write_iops_high_static"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["WriteIOPSEvaluationPeriods"]
@@ -209,7 +213,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_write_iops_high" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "replica_read_latency_high" {
-  count                     = var.create_replica_read_latency_high_alarm ? 1 : 0
+  count                     = local.create_replica && var.create_replica_read_latency_high_alarm ? 1 : 0
   alarm_name                = "${var.replica_db_instance_id}_read_latency_high_static"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["ReadLatencyEvaluationPeriods"]
@@ -230,7 +234,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_read_latency_high" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "replica_write_latency_high" {
-  count                     = var.create_replica_write_latency_high_alarm ? 1 : 0
+  count                     = local.create_replica && var.create_replica_write_latency_high_alarm ? 1 : 0
   alarm_name                = "${var.replica_db_instance_id}_write_latency_high_static"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["WriteLatencyEvaluationPeriods"]
@@ -251,7 +255,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_write_latency_high" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "replica_transaction_logs_disk_usage_high" {
-  count                     = var.create_replica_transaction_logs_disk_usage_high_alarm ? 1 : 0
+  count                     = local.create_replica && var.create_replica_transaction_logs_disk_usage_high_alarm ? 1 : 0
   alarm_name                = "${var.replica_db_instance_id}_transaction_logs_disk_usage_high_static"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["TransactionLogsDiskUsageEvaluationPeriods"]
@@ -272,7 +276,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_transaction_logs_disk_usage_high
 }
 
 resource "aws_cloudwatch_metric_alarm" "replica_maximum_used_transaction_ids_high" {
-  count                     = var.create_replica_maximum_used_transaction_ids_high_alarm ? 1 : 0
+  count                     = local.create_replica && var.create_replica_maximum_used_transaction_ids_high_alarm ? 1 : 0
   alarm_name                = "${var.replica_db_instance_id}_maximum_used_transaction_ids_high_static"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["MaximumUsedTransactionIDsEvaluationPeriods"]
@@ -448,7 +452,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_read_iops" {
 
 # ReadThroughput is valid on both master and replica
 resource "aws_cloudwatch_metric_alarm" "replica_read_throughput" {
-  count                     = var.create_replica_read_throughput_anomaly_alarm ? 1 : 0
+  count                     = local.create_replica && var.create_replica_read_throughput_anomaly_alarm ? 1 : 0
   actions_enabled           = false
   alarm_actions             = [data.aws_sns_topic.topic.arn]
   alarm_description         = "Read throughput anomaly on replica detected. Examine replication lag."
@@ -1435,7 +1439,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_write_throughput_anomaly" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "replica_checkpoint_lag_high" {
-  count                     = var.create_replica_checkpoint_lag_high_alarm ? 1 : 0
+  count                     = local.create_replica && var.create_replica_checkpoint_lag_high_alarm ? 1 : 0
   alarm_name                = "${var.db_instance_id}_replica_checkpoint_lag_high_static"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["CheckpointLagEvaluationPeriods"]
