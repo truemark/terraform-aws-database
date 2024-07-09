@@ -1,0 +1,24 @@
+module "common_mysql" {
+  source                       = "truemark/database/aws//modules/mysql"
+  version                      = ">=0"
+  allocated_storage            = 400
+  auto_minor_version_upgrade   = false
+  create_security_group        = false
+  deletion_protection          = false
+  egress_cidrs                 = ["0.0.0.0/0"]
+  engine_version               = "8.0.32"
+  ingress_cidrs                = ["10.0.0.0/8"]
+  instance_name                = "mysql-${local.name}"
+  iops                         = null
+  instance_type                = "db.t4g.small"
+  manage_master_user_password  = false
+  kms_key_id                   = data.aws_kms_alias.db.target_key_id
+  max_allocated_storage        = 500
+  multi_az                     = true
+  skip_final_snapshot          = true
+  storage_type                 = "gp3"
+  subnet_ids                   = data.aws_subnets.private.ids 
+  tags                         = local.tags
+  username                     = "admin"  
+  vpc_id                       = data.aws_vpc.services.id  
+}
