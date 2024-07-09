@@ -25,7 +25,7 @@ locals {
     ReplicaLagEvaluationPeriods                = min(max(var.replica_lag_evaluation_periods, 1), 10)
     ReplicaLagThreshold                        = min(var.replica_lag_threshold, 300)
     SwapUsageEvaluationPeriods                 = min(max(var.swap_usage_evaluation_periods, 1), 10)
-    SwapUsageThreshold                         = min(var.swap_usage_threshold, 100000000) #100M
+    SwapUsageThreshold                         = max(var.swap_usage_threshold, 100000000) #100M
     TransactionLogsDiskUsageEvaluationPeriods  = min(max(var.transaction_logs_disk_usage_evaluation_periods, 1), 10)
     TransactionLogsDiskUsageThreshold          = min(var.transaction_logs_disk_usage_threshold, 100000000000) #100G
     TransactionLogsGenerationEvaluationPeriods = min(max(var.transaction_logs_generation_evaluation_periods, 1), 10)
