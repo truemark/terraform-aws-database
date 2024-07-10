@@ -297,6 +297,11 @@ variable "random_password_length" {
   type        = number
   default     = 16
 }
+variable "replicate_source_db" {
+  description = "The DB instance identifier of the master db."
+  type        = string
+  default     = null
+}
 variable "security_group_tags" {
   description = "Additional tags for the security group"
   type        = map(string)
