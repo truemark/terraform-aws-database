@@ -100,6 +100,7 @@ module "db" {
   password                              = var.manage_master_user_password ? null : (var.password != null ? var.password : join("", random_password.db.*.result))
   performance_insights_enabled          = var.performance_insights_enabled
   performance_insights_retention_period = 7
+  replicate_source_db                   = var.replicate_source_db
   skip_final_snapshot                   = var.skip_final_snapshot
   snapshot_identifier                   = var.snapshot_identifier
   storage_encrypted                     = true
