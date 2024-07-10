@@ -10,8 +10,8 @@ data "aws_rds_engine_version" "mysql" {
 resource "aws_rds_cluster" "cluster" {
   skip_final_snapshot              = true
   cluster_identifier               = var.cluster_identifier
-  enabled_cloudwatch_logs_exports  = ["mysql"]
-  engine                           = data.aws_rds_engine_version.postgresql.engine
+  enabled_cloudwatch_logs_exports  = ["error"]
+  engine                           = data.aws_rds_engine_version.mysql.engine
   engine_mode                      = var.cluster_engine_mode
   engine_version                   = var.engine_version
   database_name                    = var.cluster_identifier
