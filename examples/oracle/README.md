@@ -1,6 +1,8 @@
+## Example Usage
+```
 module "db" {
   source                          = "truemark/database/aws//modules/oracle"
-  version                         = ">0"
+  version                         = ">=0"
   
   database_name                   = "DBNAME"
   allocated_storage               = 100
