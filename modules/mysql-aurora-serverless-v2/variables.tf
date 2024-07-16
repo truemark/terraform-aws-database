@@ -61,26 +61,26 @@ variable "master_username" {
 variable "max_capacity" {
   description = "The maxiumum capacity for an Aurora DB cluster in serverless DB engine mode. Must be greater than or equal to minimum capacity"
   type        = number
-  default     = 4
+  default     = 128
 }
 
 variable "min_capacity" {
   description = "The minimum capacity for an Aurora DB cluster in serverless DB engine mode. Must be less than or equal to the maximum capacity."
   type        = number
-  default     = 2
+  default     = 0.5
 }
 
 variable "performance_insights_enabled" {
   description = "Switch to turn on performance insights."
   type        = bool
-  default     = true
+  default     = false
 }
 
-variable "performance_insights_retention_period" {
-  description = "How many days to keep Performance Insights data."
-  type        = number
-  default     = 7
-}
+# variable "performance_insights_retention_period" {
+#   description = "How many days to keep Performance Insights data."
+#   type        = number
+#   default     = 7
+# }
 
 variable "port" {
   description = "The port the instance listens on."

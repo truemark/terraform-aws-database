@@ -43,8 +43,8 @@ resource "aws_rds_cluster_instance" "writer" {
   engine_version                  = aws_rds_cluster.cluster.engine_version
   db_subnet_group_name            = aws_db_subnet_group.cluster.name
   db_parameter_group_name         = aws_db_parameter_group.db.name
-  performance_insights_enabled    = var.performance_insights_enabled
-  performance_insights_kms_key_id = data.aws_kms_key.db.arn
+  # performance_insights_enabled    = var.performance_insights_enabled
+  # performance_insights_kms_key_id = data.aws_kms_key.db.arn
   depends_on                      = [aws_rds_cluster.cluster]
 }
 
@@ -121,7 +121,7 @@ resource "aws_secretsmanager_secret_version" "db" {
 
 resource "random_password" "db" {
   length  = 12
-  special = true
+  special = false
 }
 
 resource "aws_security_group" "db" {
