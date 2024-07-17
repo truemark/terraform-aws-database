@@ -61,7 +61,7 @@ variable "master_username" {
 variable "max_capacity" {
   description = "The maxiumum capacity for an Aurora DB cluster in serverless DB engine mode. Must be greater than or equal to minimum capacity"
   type        = number
-  default     = 128
+  default     = 16
 }
 
 variable "min_capacity" {
@@ -69,18 +69,6 @@ variable "min_capacity" {
   type        = number
   default     = 0.5
 }
-
-variable "performance_insights_enabled" {
-  description = "Switch to turn on performance insights."
-  type        = bool
-  default     = false
-}
-
-# variable "performance_insights_retention_period" {
-#   description = "How many days to keep Performance Insights data."
-#   type        = number
-#   default     = 7
-# }
 
 variable "port" {
   description = "The port the instance listens on."
@@ -163,7 +151,7 @@ variable "vpc_id" {
 variable "writer_instance_class" {
   description = "Instance class of a provisioned cluster writer. This parameter is required if cluster_engine_mode is set to provisioned."
   type        = string
-  default     = "db.t3.medium"
+  default     = "db.serverless"
 }
 
 variable "writer_instance_count" {
