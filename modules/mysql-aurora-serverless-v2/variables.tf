@@ -36,6 +36,12 @@ variable "egress_cidr_blocks" {
   default     = ["0.0.0.0/0"]
 }
 
+variable "engine_version" {
+  description = "The version of the postgres cluster engine to create."
+  type        = string
+  default     = "8.0.mysql_aurora.3.07.0"
+}
+
 variable "family" {
   description = "The database family of the instance and parameter group."
   default     = "aurora-mysql8.0"
@@ -74,12 +80,6 @@ variable "port" {
   description = "The port the instance listens on."
   type        = number
   default     = 3302
-}
-
-variable "engine_version" {
-  description = "The version of the postgres cluster engine to create."
-  type        = string
-  default     = "8.0.mysql_aurora.3.02.0"
 }
 
 variable "preferred_backup_window" {
