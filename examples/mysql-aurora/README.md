@@ -46,7 +46,7 @@ locals {
 
 module "db" {
   source              = "truemark/database/aws//modules/mysql-aurora"
-  version             = "0.0.14"
+  version             >= "0"
 
   auto_minor_version_upgrade      = false
   ca_cert_identifier              = "rds-ca-rsa2048-g1"
