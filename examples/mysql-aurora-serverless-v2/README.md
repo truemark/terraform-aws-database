@@ -46,7 +46,7 @@ locals {
 
 module "db" {
   source                = "truemark/database/aws//modules/mysql-aurora-serverless-v2"
-  version               >= "0"
+  version               = ">=0"
   cluster_identifier    = local.cluster_name
   deletion_protection   = false
   engine_version        = "8.0.mysql_aurora.3.07.0"
