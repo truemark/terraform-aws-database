@@ -46,7 +46,7 @@ locals {
 
 module "db" {
   source              = "truemark/database/aws//modules/mysql"
-  version             >= "0"
+  version             = ">=0"
   allocated_storage            = 400
   create_security_group        = false
   instance_name                = local.name
