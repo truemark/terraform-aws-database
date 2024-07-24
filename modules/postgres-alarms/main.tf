@@ -13,7 +13,7 @@ resource "aws_db_event_subscription" "instance_sub" {
   name        = "${var.db_instance_id}-instances"
   sns_topic   = data.aws_sns_topic.topic.arn
   source_type = "db-instance"
-  source_ids = compact([ var.db_instance_id, var.replica_db_instance_id != "" ? var.replica_db_instance_id : null ])
+  source_ids  = compact([var.db_instance_id, var.replica_db_instance_id != "" ? var.replica_db_instance_id : null])
   event_categories = [
     "availability",
     "deletion",

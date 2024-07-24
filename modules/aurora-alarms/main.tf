@@ -149,6 +149,7 @@ locals {
 resource "aws_cloudwatch_metric_alarm" "percent_free_memory_low" {
   for_each                  = var.db_cluster_members
   alarm_name                = "${each.key}_percent_free_memory_low"
+  actions_enabled           = var.enable_percent_free_memory_low_alarm
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["PercentFreeMemoryEvaluationPeriods"]
   threshold                 = local.thresholds["PercentFreeMemoryThreshold"]
@@ -201,6 +202,7 @@ resource "aws_cloudwatch_metric_alarm" "percent_free_memory_low" {
 resource "aws_cloudwatch_metric_alarm" "cpu_utilization_high" {
   for_each                  = var.db_cluster_members
   alarm_name                = "${each.key}_cpu_utilization_high"
+  actions_enabled           = var.enable_cpu_utilization_high_alarm
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["CPUUtilizationEvaluationPeriods"]
   metric_name               = "CPUUtilization"
@@ -222,6 +224,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_high" {
 resource "aws_cloudwatch_metric_alarm" "disk_queue_depth_high" {
   for_each                  = var.db_cluster_members
   alarm_name                = "${each.key}_disk_queue_depth_high"
+  actions_enabled           = var.enable_disk_queue_depth_high_alarm
   comparison_operator       = "GreaterThanThreshold"
   datapoints_to_alarm       = local.thresholds["DiskQueueDataPointsToAlarm"]
   evaluation_periods        = local.thresholds["DiskQueueDepthEvaluationPeriods"]
@@ -244,6 +247,7 @@ resource "aws_cloudwatch_metric_alarm" "disk_queue_depth_high" {
 resource "aws_cloudwatch_metric_alarm" "freeable_memory_low" {
   for_each                  = var.db_cluster_members
   alarm_name                = "${each.key}_freeable_memory_low"
+  actions_enabled           = var.enable_freeable_memory_low_alarm
   comparison_operator       = "LessThanThreshold"
   evaluation_periods        = "1"
   metric_name               = "FreeableMemory"
@@ -265,6 +269,7 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory_low" {
 resource "aws_cloudwatch_metric_alarm" "free_storage_space_low" {
   for_each            = var.db_cluster_members
   alarm_name          = "${each.key}_free_storage_space_low"
+  actions_enabled     = var.enable_free_storage_space_low_alarm
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = "1"
   metric_name         = "FreeLocalStorage"
@@ -284,6 +289,7 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_low" {
 resource "aws_cloudwatch_metric_alarm" "swap_usage_high" {
   for_each                  = var.db_cluster_members
   alarm_name                = "${each.key}_swap_usage_high"
+  actions_enabled           = var.enable_swap_usage_high_alarm
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["SwapUsageEvaluationPeriods"]
   metric_name               = "SwapUsage"
