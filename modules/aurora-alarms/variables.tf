@@ -25,6 +25,42 @@ variable "cpu_utilization_evaluation_periods" {
   default     = 5
 }
 
+variable "enable_percent_free_memory_low_alarm" {
+  description = "Toggle to create percent_free_memory_low alarm."
+  type        = bool
+  default     = true
+}
+
+variable "enable_cpu_utilization_high_alarm" {
+  description = "Toggle to create cpu_utilization_high alarm."
+  type        = bool
+  default     = true
+}
+
+variable "enable_disk_queue_depth_high_alarm" {
+  description = "Toggle to create disk_queue_depth_high alarm."
+  type        = bool
+  default     = true
+}
+
+variable "enable_freeable_memory_low_alarm" {
+  description = "Toggle to create freeable_memory_low alarm."
+  type        = bool
+  default     = true
+}
+
+variable "enable_free_storage_space_low_alarm" {
+  description = "Toggle to create free_storage_space_low alarm."
+  type        = bool
+  default     = true
+}
+
+variable "enable_swap_usage_high_alarm" {
+  description = "Toggle to create swap_usage_high alarm."
+  type        = bool
+  default     = true
+}
+
 variable "disk_queue_data_points_to_alarm" {
   description = "The number of datapoints that must be breaching to trigger the alarm."
   type        = number
@@ -40,7 +76,7 @@ variable "disk_queue_depth_threshold" {
 variable "disk_queue_depth_evaluation_periods" {
   description = "The number of periods threshold must be breached to alarm."
   type        = number
-  default     = 5
+  default     = 10
 }
 
 variable "freeable_memory_threshold" {
