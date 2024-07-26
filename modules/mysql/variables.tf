@@ -160,7 +160,7 @@ variable "engine" {
 variable "engine_version" {
   description = "MySQL database engine version."
   type        = string
-  default     = "8.0.30"
+  default     = "8.0.32"
 }
 
 # aws rds describe-db-engine-versions --query "DBEngineVersions[].DBParameterGroupFamily"
