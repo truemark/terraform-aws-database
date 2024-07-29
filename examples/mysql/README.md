@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-west-2"
+  region = "us-east-1"
 }
 
 terraform {
@@ -18,19 +18,15 @@ data "aws_caller_identity" "current" {}
 data "aws_vpc" "main" {
   filter {
     name   = "tag:Name"
-    values = ["services"]
+    values = ["default"]
   }
 }
 
 data "aws_subnets" "private" {
   filter {
     name   = "tag:network"
-    values = ["private"]
+    values = ["public"]
   }
-}
-
-data "aws_kms_alias" "key" {
-  name = "alias/shared"
 }
 
 locals {
@@ -39,6 +35,8 @@ locals {
   name   = "mysql"
   environment = "dev"
   region = data.aws_region.current.name
+  subnets     = data.aws_subnets.private.ids
+  vpc_id = data.aws_vpc.main.id
   tags = {
     "automation:id"  = local.name
   }
@@ -53,7 +51,6 @@ module "db" {
   iops                         = null
   instance_type                = "db.t4g.small"
   manage_master_user_password  = true
-  kms_key_id                   = data.aws_kms_alias.key.target_key_arn
   max_allocated_storage        = 500
   multi_az                     = true
   skip_final_snapshot          = true

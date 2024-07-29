@@ -101,7 +101,7 @@ variable "egress_cidrs" {
 variable "engine_version" {
   description = "Aurora database engine version."
   type        = string
-  default     = "8.0.mysql_aurora.3.01.0" # max version supporting proxy
+  default     = "8.0.mysql_aurora.3.05.2" # max version supporting proxy
 }
 
 variable "family" {
@@ -118,7 +118,7 @@ variable "ingress_cidrs" {
 variable "instance_class" {
   description = "Instance type to use at master instance. If instance_type_replica is not set it will use the same type for replica instances"
   type        = string
-  default     = "db.r6g.large"
+  default     = "db.t4g.large"
 }
 
 variable "kms_key_id" {
