@@ -44,7 +44,7 @@ resource "aws_rds_cluster_instance" "writer" {
   db_subnet_group_name            = aws_db_subnet_group.cluster.name
   db_parameter_group_name         = aws_db_parameter_group.db.name
   performance_insights_enabled    = var.performance_insights_enabled
-  performance_insights_kms_key_id = data.aws_kms_key.db.arn
+  performance_insights_kms_key_id = var.performance_insights_enabled ? data.aws_kms_key.db.arn : null
   depends_on                      = [aws_rds_cluster.cluster]
 }
 
@@ -62,7 +62,7 @@ resource "aws_rds_cluster_instance" "reader" {
   db_subnet_group_name            = aws_db_subnet_group.cluster.name
   db_parameter_group_name         = aws_db_parameter_group.db.name
   performance_insights_enabled    = var.performance_insights_enabled
-  performance_insights_kms_key_id = data.aws_kms_key.db.arn
+  performance_insights_kms_key_id = var.performance_insights_enabled ? data.aws_kms_key.db.arn : null
   depends_on                      = [aws_rds_cluster.cluster]
 }
 
@@ -120,7 +120,7 @@ resource "aws_secretsmanager_secret_version" "db" {
 }
 
 resource "random_password" "db" {
-  length  = 12
+  length  = 16
   special = true
 }
 
@@ -132,17 +132,9 @@ resource "aws_security_group" "db" {
   ingress {
     from_port   = var.port
     to_port     = var.port
-    protocol    = "tcp"
+    protocol    = "TCP"
     cidr_blocks = var.ingress_cidr_blocks
   }
-
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = -1
-    cidr_blocks = var.ingress_cidr_blocks
-  }
-
   egress {
     from_port   = 0
     to_port     = 0

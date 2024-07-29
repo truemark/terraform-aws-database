@@ -55,7 +55,7 @@ variable "kms_key_alias" {
 variable "master_username" {
   description = "The name of the master account for the db. Defaults to root."
   type        = string
-  default     = "root"
+  default     = "postgres"
 }
 
 variable "max_capacity" {
@@ -91,7 +91,7 @@ variable "port" {
 variable "postgres_engine_version" {
   description = "The version of the postgres cluster engine to create."
   type        = string
-  default     = "13.6"
+  default     = "15.4"
 }
 
 variable "preferred_backup_window" {
