@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-west-2"
+  region = "us-east-1"
 }
 
 terraform {
@@ -18,27 +18,30 @@ data "aws_caller_identity" "current" {}
 data "aws_vpc" "main" {
   filter {
     name   = "tag:Name"
-    values = ["services"]
+    values = ["default"]
   }
 }
 
 data "aws_subnets" "private" {
   filter {
     name   = "tag:network"
-    values = ["private"]
+    values = ["public"]
   }
 }
 
-data "aws_kms_alias" "key" {
-  name = "alias/shared"
+data "aws_kms_alias" "db" {
+  name = "alias/aws/rds"
 }
 
 locals {
   db_parameters = []
   #config = {}
   name   = "mysql"
+  cluster_name = "mysqlsrvrless"
   environment = "dev"
   region = data.aws_region.current.name
+  subnets     = data.aws_subnets.private.ids
+  vpc_id = data.aws_vpc.main.id
   tags = {
     "automation:id"  = local.name
   }
@@ -47,9 +50,8 @@ locals {
 module "db" {
   source                = "truemark/database/aws//modules/mysql-aurora-serverless-v2"
   version               = ">=0"
+
   cluster_identifier    = local.cluster_name
-  deletion_protection   = false
-  engine_version        = "8.0.mysql_aurora.3.07.0"
   kms_key_alias         = data.aws_kms_alias.db.arn
   master_username       = "admin"
   reader_instance_class = "db.serverless"
@@ -58,4 +60,5 @@ module "db" {
   tags                  = local.tags
   vpc_id                = local.vpc_id
 }
+
 

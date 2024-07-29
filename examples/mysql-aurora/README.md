@@ -48,7 +48,7 @@ module "db" {
   version             = ">= 0"
 
   db_parameters                   = local.db_parameters
-  db_subnet_group_name             = "mysqlcommon"
+  db_subnet_group_name            = "mysqlcommon"
   manage_master_user_password     = true
   name                            = local.name
   replica_count                   = local.environment == "prod" ? 1 : 0
