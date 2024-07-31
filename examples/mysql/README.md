@@ -18,14 +18,14 @@ data "aws_caller_identity" "current" {}
 data "aws_vpc" "main" {
   filter {
     name   = "tag:Name"
-    values = ["default"]
+    values = ["tftest-vpc"]
   }
 }
 
 data "aws_subnets" "private" {
   filter {
-    name   = "tag:network"
-    values = ["public"]
+    name   = "tag:Environment"
+    values = ["tftest"]
   }
 }
 

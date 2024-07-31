@@ -1,8 +1,9 @@
 locals {
+  name = lower(var.instance_name != "" ? var.instance_name : var.database_name)
   tags = merge(var.tags,
     {
       "automation:component-id"     = "rds-oracle",
-      "automation:component-url"    = "https://registry.terraform.io/modules/truemark/rds-oracle/aws/latest",
+      "automation:component-url"    = "https://registry.terraform.io/modules/truemark/database/aws/latest/submodules/oracle",
       "automation:component-vendor" = "TrueMark",
       "backup:policy"               = "default-week",
   })
@@ -42,15 +43,15 @@ module "db" {
   create_db_option_group          = var.create_db_option_group
   create_db_subnet_group          = var.create_db_subnet_group
   db_instance_tags                = local.tags
-  db_subnet_group_description     = "Subnet group for ${var.instance_name}. Managed by Terraform."
-  db_subnet_group_name            = var.db_subnet_group_name != null ? var.db_subnet_group_name : var.instance_name
+  db_subnet_group_description     = "Subnet group for ${local.name}. Managed by Terraform."
+  db_subnet_group_name            = var.db_subnet_group_name != null ? lower(var.db_subnet_group_name) : local.name
   db_subnet_group_tags            = local.tags
   deletion_protection             = var.deletion_protection
   enabled_cloudwatch_logs_exports = ["alert", "trace", "listener"]
   engine                          = var.engine
   engine_version                  = var.engine_version
   family                          = var.family
-  identifier                      = var.instance_name
+  identifier                      = local.name
   instance_class                  = var.instance_type
   iops                            = var.master_iops
   kms_key_id                      = var.kms_key_id
@@ -62,7 +63,7 @@ module "db" {
   monitoring_interval             = var.monitoring_interval
   monitoring_role_arn             = aws_iam_role.rds_enhanced_monitoring.arn
   multi_az                        = var.multi_az
-  option_group_name               = var.instance_name
+  option_group_name               = local.name
   options                         = var.db_options
   option_group_description        = var.option_group_description
   #parameters                            = var.db_parameters
@@ -90,8 +91,8 @@ module "db" {
 # create it. This is all to get around the issue with Oracle requiring
 # database names to be in CAPS and
 resource "aws_db_parameter_group" "db_parameter_group" {
-  name_prefix = var.instance_name
-  description = "Terraform managed parameter group for ${var.instance_name}"
+  name_prefix = local.name
+  description = "Terraform managed parameter group for ${local.name}"
   family      = var.family
   tags        = local.tags
   dynamic "parameter" {
@@ -107,8 +108,8 @@ resource "aws_db_parameter_group" "db_parameter_group" {
 #-----------------------------------------------------------------------------
 resource "aws_secretsmanager_secret" "db" {
   count       = var.manage_master_user_password ? 0 : 1
-  name_prefix = "database/${var.instance_name}/master-"
-  description = "Master password for ${var.master_username} in ${var.instance_name}"
+  name_prefix = "database/${local.name}/master-"
+  description = "Master password for ${var.master_username} in ${local.name}"
   tags        = local.tags
 }
 
@@ -146,7 +147,7 @@ data "aws_secretsmanager_secret_version" "db" {
 #-----------------------------------------------------------------------------
 
 resource "aws_security_group" "db_security_group" {
-  name   = var.instance_name
+  name   = local.name
   vpc_id = var.vpc_id
   tags   = local.tags
 
@@ -192,7 +193,7 @@ resource "aws_security_group" "db_security_group" {
 ################################################################################
 
 resource "aws_iam_role" "rds_enhanced_monitoring" {
-  name               = "rds-enhanced-monitoring-${lower(var.instance_name)}"
+  name               = "rds-enhanced-monitoring-${local.name}"
   assume_role_policy = data.aws_iam_policy_document.rds_enhanced_monitoring.json
 }
 
@@ -227,7 +228,7 @@ resource "aws_db_instance_role_association" "s3_data_archive" {
 }
 
 resource "aws_iam_role" "s3_data_archive" {
-  name               = "s3-data-archive-${lower(var.instance_name)}"
+  name               = "s3-data-archive-${local.name}"
   assume_role_policy = data.aws_iam_policy_document.assume_s3_data_archive_role_policy.json
 }
 
@@ -238,7 +239,7 @@ resource "aws_iam_role_policy_attachment" "s3_data_archive" {
 }
 
 resource "aws_iam_policy" "s3_data_archive" {
-  name        = "s3-data-archive-${lower(var.instance_name)}"
+  name        = "s3-data-archive-${local.name}"
   description = "Terraform managed RDS Instance policy."
   policy      = data.aws_iam_policy_document.exec_s3_data_archive.json
 }
