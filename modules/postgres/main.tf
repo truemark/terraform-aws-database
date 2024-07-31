@@ -4,7 +4,7 @@ locals {
   tags = merge(var.tags,
     {
       "automation:component-id"     = "terraform-aws-rds-postgres",
-      "automation:component-url"    = "https://registry.terraform.io/modules/truemark/database/aws/latestsubmodules/postgres",
+      "automation:component-url"    = "https://registry.terraform.io/modules/truemark/database/aws/latest/submodules/postgres",
       "automation:component-vendor" = "TrueMark",
       "backup:policy"               = "default-week",
   })
