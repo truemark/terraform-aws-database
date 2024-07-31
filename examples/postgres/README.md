@@ -11,19 +11,21 @@ terraform {
   }
 }
 
+data "aws_region" "current" {}
+
 data "aws_caller_identity" "current" {}
 
 data "aws_vpc" "main" {
   filter {
     name   = "tag:Name"
-    values = ["default"]
+    values = ["tftest-vpc"]
   }
 }
 
 data "aws_subnets" "private" {
   filter {
-    name   = "tag:network"
-    values = ["private"]
+    name   = "tag:Environment"
+    values = ["tftest"]
   }
 }
 
@@ -51,6 +53,7 @@ module "db" {
   instance_type                  = "db.t4g.micro"
   manage_master_user_password    = false
   max_allocated_storage          = 30
+  skip_final_snapshot            = false
   storage_type                   = "gp3"
   subnet_ids                     = data.aws_subnets.private.ids
   tags                           = local.tags
@@ -60,12 +63,11 @@ module "db" {
 #Add a replica database
 
 resource "aws_db_instance" "db-replica" {
-
-  allocated_storage       = 20
   identifier              = "postgres-replica"
   instance_class          = "db.t4g.micro"
   max_allocated_storage   = 30
   replicate_source_db     = module.db.db_instance_id
+  skip_final_snapshot     = false
   storage_type            = "gp3"
   depends_on              = [ module.db ]
 }

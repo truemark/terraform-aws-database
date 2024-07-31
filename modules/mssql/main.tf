@@ -36,7 +36,7 @@ locals {
   tags = merge(var.tags,
     {
       "automation:component-id"     = "rds-sqlserver",
-      "automation:component-url"    = "https://registry.terraform.io/modules/truemark/rds-sqlserver/aws/latest",
+      "automation:component-url"    = "https://registry.terraform.io/modules/truemark/database/aws/latest/submodules/mssql",
       "automation:component-vendor" = "TrueMark",
       "backup:policy"               = "default-week",
   })

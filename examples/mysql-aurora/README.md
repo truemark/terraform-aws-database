@@ -18,14 +18,14 @@ data "aws_caller_identity" "current" {}
 data "aws_vpc" "main" {
   filter {
     name   = "tag:Name"
-    values = ["default"]
+    values = ["tftest-vpc"]
   }
 }
 
 data "aws_subnets" "private" {
   filter {
-    name   = "tag:network"
-    values = ["public"]
+    name   = "tag:Environment"
+    values = ["tftest"]
   }
 }
 
@@ -33,12 +33,12 @@ data "aws_subnets" "private" {
 locals {
   db_parameters = []
   #config = {}
-  name   = "mysql"
-  environment = "dev"
-  region = data.aws_region.current.name
-  subnets     = data.aws_subnets.private.ids
-  vpc_id = data.aws_vpc.main.id
-  tags = {
+  name          = "mysql"
+  environment   = "dev"
+  region        = data.aws_region.current.name
+  subnets       = data.aws_subnets.private.ids
+  vpc_id        = data.aws_vpc.main.id
+  tags          = {
     "automation:id"  = local.name
   }
 }
