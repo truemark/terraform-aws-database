@@ -8,6 +8,12 @@ variable "auto_minor_version_upgrade" {
   type        = bool
   default     = false
 }
+#added allow major version upgrade to test version upgrades
+variable "allow_major_version_upgrade" {
+  description = "Whether or not to allow auto minor version upgrades."
+  type        = bool
+  default     = false
+}
 variable "backup_retention_period" {
   description = "How long to keep backups for (in days)"
   type        = number
