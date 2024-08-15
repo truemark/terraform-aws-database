@@ -1,3 +1,9 @@
+variable "backup_policy" {
+  description = "The backup policy to use."
+  type        = string
+  default     = "default-week"
+}
+
 variable "cluster_engine_mode" {
   description = "The engine mode config for the cluster: either provisioned or serverless."
   type        = string

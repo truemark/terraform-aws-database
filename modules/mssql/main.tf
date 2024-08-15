@@ -1,8 +1,15 @@
 locals {
   domain_role_name = "${var.instance_name}-active-directory"
-  instance_tags = {
-    "backup:policy" = var.backup_policy
   }
+
+locals {
+  tags = merge(var.tags,
+    {
+      "automation:component-id"     = "rds-sqlserver",
+      "automation:component-url"    = "https://registry.terraform.io/modules/truemark/database/aws/latest/submodules/mssql",
+      "automation:component-vendor" = "TrueMark",
+      "backup:policy"               = var.backup_policy,
+  })
 }
 
 data "aws_iam_policy_document" "ad_assume_role_policy" {
@@ -23,23 +30,13 @@ resource "aws_iam_role" "ad" {
   description           = "Role used by RDS for Active Directory"
   force_detach_policies = true
   assume_role_policy    = data.aws_iam_policy_document.ad_assume_role_policy[count.index].json
-  tags                  = var.tags
+  tags                  = local.tags
 }
 
 resource "aws_iam_role_policy_attachment" "ad" {
   count      = var.domain_id != null && var.domain_iam_role_name == null ? 1 : 0
   role       = aws_iam_role.ad[count.index].id
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSDirectoryServiceAccess"
-}
-
-locals {
-  tags = merge(var.tags,
-    {
-      "automation:component-id"     = "rds-sqlserver",
-      "automation:component-url"    = "https://registry.terraform.io/modules/truemark/database/aws/latest/submodules/mssql",
-      "automation:component-vendor" = "TrueMark",
-      "backup:policy"               = "default-week",
-  })
 }
 
 module "db" {
@@ -60,7 +57,7 @@ module "db" {
   create_db_parameter_group           = false
   create_db_subnet_group              = true
   create_monitoring_role              = var.create_monitoring_role
-  db_instance_tags                    = local.instance_tags
+  db_instance_tags                    = local.tags
   db_name                             = var.database_name
   db_subnet_group_description         = "Subnet group for ${var.instance_name}. Managed by Terraform."
   db_subnet_group_name                = var.instance_name
@@ -116,7 +113,7 @@ resource "aws_db_parameter_group" "db_parameter_group" {
   name_prefix = var.instance_name
   description = "Terraform managed parameter group for ${var.instance_name}"
   family      = var.parameter_group_family
-  tags        = var.tags
+  tags        = local.tags
   dynamic "parameter" {
     for_each = var.db_parameters
     content {
@@ -134,7 +131,7 @@ resource "aws_secretsmanager_secret" "db" {
   count       = var.create && var.store_master_password_as_secret ? 1 : 0
   name_prefix = "database/${var.instance_name}/master-"
   description = "Master password for ${var.username} in ${var.instance_name}"
-  tags        = var.tags
+  tags        = local.tags
 }
 
 resource "aws_secretsmanager_secret_version" "db" {
@@ -174,7 +171,7 @@ resource "aws_security_group" "db_security_group" {
   count  = var.create ? 1 : 0
   name   = var.instance_name
   vpc_id = var.vpc_id
-  tags   = var.tags
+  tags   = local.tags
 
   ingress {
     from_port   = var.port
@@ -227,7 +224,7 @@ resource "aws_db_option_group" "mssql_rds" {
   option_group_description = "MSSQL RDS Option Group managed by Terraform."
   engine_name              = var.engine
   major_engine_version     = var.major_engine_version
-  tags                     = var.tags
+  tags                     = local.tags
 
 }
 
@@ -247,7 +244,7 @@ resource "aws_iam_role" "s3_data_archive" {
   count              = var.create && var.archive_bucket_name != null && var.share_to_nonprod_account != null ? 1 : 0
   name               = "s3-data-archive-${lower(var.instance_name)}"
   assume_role_policy = join("", data.aws_iam_policy_document.assume_s3_data_archive_role_policy.*.json)
-  tags               = var.tags
+  tags               = local.tags
 
 }
 
@@ -418,7 +415,7 @@ resource "aws_iam_role" "audit" {
   count              = var.create && var.audit_bucket_name != null ? 1 : 0
   name               = "s3-audit-data-${lower(var.instance_name)}"
   assume_role_policy = join("", data.aws_iam_policy_document.audit_trust.*.json)
-  tags               = var.tags
+  tags               = local.tags
 }
 
 resource "aws_iam_role_policy_attachment" "audit" {
@@ -433,7 +430,7 @@ resource "aws_iam_policy" "audit" {
   name        = "s3-audit-data-${lower(var.instance_name)}"
   description = "Terraform managed RDS Instance auditing policy."
   policy      = join("", data.aws_iam_policy_document.audit.*.json)
-  tags        = var.tags
+  tags        = local.tags
 }
 
 data "aws_iam_policy_document" "audit_trust" {
