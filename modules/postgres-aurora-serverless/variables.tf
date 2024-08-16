@@ -1,3 +1,9 @@
+variable "backup_policy" {
+  description = "The backup policy to use."
+  type        = string
+  default     = "default-week"
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources."
   type        = map(string)

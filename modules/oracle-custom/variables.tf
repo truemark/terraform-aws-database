@@ -15,6 +15,12 @@ variable "auto_minor_version_upgrade" {
   default     = false
 }
 
+variable "backup_policy" {
+  description = "The backup policy to use."
+  type        = string
+  default     = "default-week"
+}
+
 variable "backup_retention_period" {
   description = "How long to keep backups for (in days)"
   type        = number

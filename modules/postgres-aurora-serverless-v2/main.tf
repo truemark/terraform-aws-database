@@ -1,3 +1,13 @@
+locals {
+  tags = merge(var.tags,
+    {
+      "automation:component-id"     = "rds-aurora-postgres-serverless-v2",
+      "automation:component-url"    = "https://registry.terraform.io/modules/truemark/database/aws/latest/submodules/postgres-aurora-serverless-v2",
+      "automation:component-vendor" = "TrueMark",
+      "backup:policy"               = var.backup_policy,
+  })
+}
+
 data "aws_kms_key" "db" {
   key_id = var.kms_key_alias
 }
@@ -18,7 +28,7 @@ resource "aws_rds_cluster" "cluster" {
   deletion_protection              = var.deletion_protection
   kms_key_id                       = data.aws_kms_key.db.arn
   storage_encrypted                = true
-  tags                             = var.tags
+  tags                             = local.tags
   master_username                  = var.master_username
   master_password                  = random_password.db.result
   db_cluster_parameter_group_name  = aws_rds_cluster_parameter_group.cluster.name
@@ -78,7 +88,7 @@ resource "aws_db_parameter_group" "db" {
       apply_method = parameter.value.apply_method
     }
   }
-  tags = merge(var.tags, var.db_parameter_group_tags)
+  tags = merge(local.tags, var.db_parameter_group_tags)
 }
 
 resource "aws_rds_cluster_parameter_group" "cluster" {
@@ -93,7 +103,7 @@ resource "aws_rds_cluster_parameter_group" "cluster" {
       apply_method = parameter.value.apply_method
     }
   }
-  tags = merge(var.tags, var.rds_cluster_parameter_group_tags)
+  tags = merge(local.tags, var.rds_cluster_parameter_group_tags)
 }
 
 resource "aws_db_subnet_group" "cluster" {
@@ -104,7 +114,7 @@ resource "aws_db_subnet_group" "cluster" {
 resource "aws_secretsmanager_secret" "db" {
   name_prefix = "database/${aws_rds_cluster.cluster.cluster_identifier}/master-"
   description = "Master password for ${aws_rds_cluster.cluster.cluster_identifier}. Managed by Terraform."
-  tags        = var.tags
+  tags        = local.tags
 }
 
 resource "aws_secretsmanager_secret_version" "db" {
@@ -127,7 +137,7 @@ resource "random_password" "db" {
 resource "aws_security_group" "db" {
   name   = var.cluster_identifier
   vpc_id = var.vpc_id
-  tags   = var.tags
+  tags   = local.tags
 
   ingress {
     from_port   = var.port

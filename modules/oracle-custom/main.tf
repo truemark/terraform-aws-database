@@ -4,7 +4,7 @@ locals {
       "automation:component-id"     = "rds-custom-oracle",
       "automation:component-url"    = "https://registry.terraform.io/modules/truemark/database/aws/latest/submodules/oracle-custom",
       "automation:component-vendor" = "TrueMark",
-      "backup:policy"               = "default-week",
+      "backup:policy"               = var.backup_policy,
   })
 }
 
