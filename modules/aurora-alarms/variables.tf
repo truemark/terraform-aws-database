@@ -82,7 +82,7 @@ variable "disk_queue_depth_evaluation_periods" {
 variable "freeable_memory_threshold" {
   description = "The minimum amount of available random access memory in Byte."
   type        = number
-  default     = 2147483648 #2GB in bytes
+  default     = 1073741824 #1GB in bytes
 }
 
 variable "freeable_memory_evaluation_periods" {
@@ -102,7 +102,7 @@ variable "free_storage_space_threshold" {
 variable "swap_usage_threshold" {
   description = "The maximum amount of swap space used on the DB instance in bytes."
   type        = number
-  default     = 256000000
+  default     = 1073741824
 
   # 256 Megabyte in Byte
 }

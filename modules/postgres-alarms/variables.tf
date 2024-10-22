@@ -594,7 +594,7 @@ variable "freeable_memory_evaluation_periods" {
 variable "freeable_memory_threshold" {
   description = "The minimum amount of available random access memory in Byte."
   type        = number
-  default     = 1000000000 #1GB in bytes
+  default     = 1073741824 #1GB in bytes
 }
 
 variable "local_storage_pct_evaluation_periods" {
