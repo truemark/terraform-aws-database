@@ -1,3 +1,13 @@
+locals {
+  tags = merge(var.tags,
+    {
+      "automation:component-id"     = "rds-aurora-postgres-serverless",
+      "automation:component-url"    = "https://registry.terraform.io/modules/truemark/database/aws/latest/submodules/postgres-aurora-serverless",
+      "automation:component-vendor" = "TrueMark",
+      "backup:policy"               = var.backup_policy,
+  })
+}
+
 resource "aws_db_parameter_group" "db" {
   count       = var.create_cluster && var.db_parameter_group_name == null ? 1 : 0
   name        = var.name
@@ -61,7 +71,7 @@ module "db" {
   preferred_backup_window         = var.preferred_backup_window
   preferred_maintenance_window    = var.preferred_maintenance_window
   deletion_protection             = var.deletion_protection
-  tags                            = var.tags
+  tags                            = local.tags
   cluster_tags                    = var.cluster_tags
   copy_tags_to_snapshot           = var.copy_tags_to_snapshot
   security_group_tags             = var.security_group_tags

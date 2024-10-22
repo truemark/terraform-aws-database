@@ -8,7 +8,7 @@ locals {
       "automation:component-id"     = "rds-aurora-mysql",
       "automation:component-url"    = "https://registry.terraform.io/modules/truemark/database/aws/latest/submodules/mysql-aurora",
       "automation:component-vendor" = "TrueMark",
-      "backup:policy"               = "default-week",
+      "backup:policy"               = var.backup_policy,
   })
   security_group_rules = [
     {
@@ -41,7 +41,7 @@ resource "aws_db_parameter_group" "db" {
       apply_method = parameter.value.apply_method
     }
   }
-  tags = merge(var.tags, var.db_parameter_group_tags)
+  tags = merge(local.tags, var.db_parameter_group_tags)
 }
 
 resource "aws_rds_cluster_parameter_group" "db" {
@@ -57,7 +57,7 @@ resource "aws_rds_cluster_parameter_group" "db" {
       apply_method = parameter.value.apply_method
     }
   }
-  tags = merge(var.tags, var.rds_cluster_parameter_group_tags)
+  tags = merge(local.tags, var.rds_cluster_parameter_group_tags)
 }
 
 
@@ -109,14 +109,14 @@ resource "aws_ram_resource_share" "db" {
   count                     = var.create && var.share ? 1 : 0
   name                      = "${var.name}-rds"
   allow_external_principals = false
-  tags                      = merge(var.tags, var.share_tags)
+  tags                      = merge(local.tags, var.share_tags)
 }
 
 resource "aws_secretsmanager_secret" "db" {
   count       = var.create && var.manage_master_user_password ? 0 : 1
   name_prefix = var.master_password_secret_name_prefix == null ? "database/${var.name}/master-" : var.master_password_secret_name_prefix
   description = "Master password for ${var.name}"
-  tags        = merge(var.tags, var.password_secret_tags)
+  tags        = merge(local.tags, var.password_secret_tags)
 }
 
 resource "aws_secretsmanager_secret_version" "db" {

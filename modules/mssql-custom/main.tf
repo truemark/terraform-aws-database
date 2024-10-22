@@ -1,8 +1,8 @@
 locals {
   tags = merge(var.tags,
     {
-      "automation:component-id"     = "rds-custom-oracle",
-      "automation:component-url"    = "https://registry.terraform.io/modules/truemark/database/aws/latest/submodules/oracle-custom",
+      "automation:component-id"     = "rds-custom-mssql",
+      "automation:component-url"    = "https://registry.terraform.io/modules/truemark/database/aws/latest/submodules/mssql-custom",
       "automation:component-vendor" = "TrueMark",
       "backup:policy"               = var.backup_policy,
   })
@@ -10,36 +10,18 @@ locals {
 
 module "db" {
   # https://registry.terraform.io/modules/terraform-aws-modules/rds/aws/latest
-  # https://github.com/terraform-aws-modules/terraform-aws-rds/blob/v3.3.0/examples/complete-oracle/main.tf
+  # https://github.com/terraform-aws-modules/terraform-aws-rds/blob/v3.3.0/examples/complete-mssql/main.tf
   source  = "terraform-aws-modules/rds/aws"
   version = "6.5.4"
 
-  # The name of the database to create. Upper is required by Oracle.
-  # Can't be more than 8 characters.
-  db_name = upper(var.database_name)
-
-  #-----------------------------------------------------------------------------
-  # Define references to the parameter group. This module does not create it.
   create_db_parameter_group = var.create_db_parameter_group
-  # When this rds/aws module is set to create a default parameter group,
-  # it takes the name parameter above and uses it
-  # to create the parameter group name. This parameter group name can't be
-  # capitalized. However, Oracle requires that the database
-  # name be capitalized. Therefore, I'm hard coding the
-  # parameter group name.
-  parameter_group_name = null
-  # Yes, the parameter is "parameter_group_name", and yes, the corresponding
-  # Terraform parameter is "id". Yes, it's confusing.
-  #-----------------------------------------------------------------------------
-
-  # parameter_group_use_name_prefix = false
   allocated_storage           = var.allocated_storage
   auto_minor_version_upgrade  = var.auto_minor_version_upgrade
   apply_immediately           = var.apply_immediately
   backup_retention_period     = var.backup_retention_period
   ca_cert_identifier          = var.ca_cert_identifier
   copy_tags_to_snapshot       = var.copy_tags_to_snapshot
-  create_db_option_group      = var.create_db_option_group # not used in custom set to false
+  create_db_option_group      = false #var.create_db_option_group # not used in custom set to false
   create_db_subnet_group      = var.create_db_subnet_group
   custom_iam_instance_profile = var.custom_iam_instance_profile
   db_instance_tags            = local.tags
@@ -54,13 +36,9 @@ module "db" {
   instance_class              = var.instance_type
   iops                        = var.master_iops
   kms_key_id                  = var.kms_key_id
-  license_model               = var.license_model
   maintenance_window          = var.preferred_maintenance_window
   major_engine_version        = var.major_engine_version
   manage_master_user_password = false # not supported in custom
-  option_group_name           = var.instance_name
-  options                     = var.db_options
-  option_group_description    = var.option_group_description
   password                    = var.store_master_password_as_secret ? random_password.root_password.result : null
   skip_final_snapshot         = var.skip_final_snapshot
   snapshot_identifier         = var.snapshot_identifier
@@ -96,7 +74,7 @@ resource "aws_secretsmanager_secret_version" "db" {
     "port"           = module.db.db_instance_port
     "dbname"         = module.db.db_instance_name
     "connect_string" = "${module.db.db_instance_endpoint}/${upper(var.instance_name)}"
-    "engine"         = "oracle"
+    "engine"         = "mssql"
   })
 }
 resource "random_password" "root_password" {
@@ -125,8 +103,8 @@ resource "aws_security_group" "db_security_group" {
   tags   = local.tags
 
   ingress {
-    from_port   = 1521
-    to_port     = 1521
+    from_port   = 1433
+    to_port     = 1433
     protocol    = "tcp"
     cidr_blocks = var.ingress_cidrs
   }
@@ -139,17 +117,30 @@ resource "aws_security_group" "db_security_group" {
   }
 
   ingress {
-    from_port   = 3872
-    to_port     = 3872
+    from_port   = 3389
+    to_port     = 3389
     protocol    = "tcp"
     cidr_blocks = var.ingress_cidrs
   }
 
-  # TODO Lock this down later
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = -1
+    from_port   = 1120
+    to_port     = 1120
+    protocol    = "tcp"
+    cidr_blocks = var.ingress_cidrs
+  }
+
+  ingress {
+    from_port   = 1434
+    to_port     = 1434
+    protocol    = "tcp"
+    cidr_blocks = var.ingress_cidrs
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = var.ingress_cidrs
   }
 

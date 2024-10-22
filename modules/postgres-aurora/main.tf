@@ -8,7 +8,7 @@ locals {
       "automation:component-id"     = "rds-aurora-postgres",
       "automation:component-url"    = "https://registry.terraform.io/modules/truemark/database/aws/latest/submodules/aurora-postgres",
       "automation:component-vendor" = "TrueMark",
-      "backup:policy"               = "default-week",
+      "backup:policy"               = var.backup_policy,
   })
 
   security_group_rules = [
@@ -42,7 +42,7 @@ resource "aws_db_parameter_group" "db" {
       apply_method = parameter.value.apply_method
     }
   }
-  tags = merge(var.tags, var.db_parameter_group_tags)
+  tags = merge(local.tags, var.db_parameter_group_tags)
 }
 
 resource "aws_rds_cluster_parameter_group" "db" {
@@ -58,7 +58,7 @@ resource "aws_rds_cluster_parameter_group" "db" {
       apply_method = parameter.value.apply_method
     }
   }
-  tags = merge(var.tags, var.rds_cluster_parameter_group_tags)
+  tags = merge(local.tags, var.rds_cluster_parameter_group_tags)
 }
 module "db" {
   # https://registry.terraform.io/modules/terraform-aws-modules/rds-aurora/aws/latest
@@ -66,6 +66,7 @@ module "db" {
   version = "9.3.1"
 
   apply_immediately                      = var.apply_immediately
+  allow_major_version_upgrade            = var.allow_major_version_upgrade
   auto_minor_version_upgrade             = var.auto_minor_version_upgrade
   backup_retention_period                = var.backup_retention_period
   ca_cert_identifier                     = var.ca_cert_identifier

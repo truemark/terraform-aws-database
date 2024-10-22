@@ -60,7 +60,7 @@ variable "availability_zone" {
 variable "backup_policy" {
   description = "The backup policy to use."
   type        = string
-  default     = null
+  default     = "default-week"
 }
 
 variable "backup_retention_period" {

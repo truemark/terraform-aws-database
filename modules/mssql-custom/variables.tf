@@ -38,12 +38,6 @@ variable "copy_tags_to_snapshot" {
   default     = true
 }
 
-variable "create_db_option_group" {
-  description = "Whether to create the db option group for the RDS instance"
-  default     = true
-  type        = bool
-}
-
 variable "create_db_parameter_group" {
   description = "Whether to create the db parameter group for the RDS instance"
   default     = false
@@ -60,12 +54,6 @@ variable "custom_iam_instance_profile" {
   description = "RDS custom iam instance profile"
   type        = string
   default     = null
-}
-
-variable "database_name" {
-  description = "Name for the database within Oracle."
-  type        = string
-  default     = ""
 }
 
 variable "db_instance_create_timeout" {
@@ -110,13 +98,13 @@ variable "egress_cidrs" {
 }
 
 variable "engine" {
-  description = "Oracle database engine."
+  description = "SQL Server database engine."
   type        = string
-  default     = "custom-oracle-ee"
+  default     = "custom-sqlserver-ee"
 }
 
 variable "engine_version" {
-  description = "Oracle database engine version."
+  description = "SQL Server database engine version."
   type        = string
   default     = null
 }
@@ -134,7 +122,7 @@ variable "ingress_cidrs" {
 }
 
 variable "instance_name" {
-  description = "Name for the Oracle RDS instance. This will display in the console."
+  description = "Name for the SQL Server RDS instance. This will display in the console."
   type        = string
   default     = ""
 }
@@ -151,14 +139,8 @@ variable "kms_key_id" {
   default     = null
 }
 
-variable "license_model" {
-  description = "The licensing model for Oracle on RDS. Options are bring-your-own-license or license-included."
-  type        = string
-  default     = "bring-your-own-license"
-}
-
 variable "major_engine_version" {
-  description = "Oracle database engine version."
+  description = "SQL Server database engine version."
   type        = string
   default     = "19"
 }
@@ -172,18 +154,6 @@ variable "master_iops" {
 variable "master_username" {
   description = "The master database account to create."
   default     = "admin"
-}
-
-variable "option_group_description" {
-  description = "The description of the option group"
-  type        = string
-  default     = null
-}
-
-variable "option_group_name" {
-  description = "Name of the option group"
-  type        = string
-  default     = null
 }
 
 variable "password" {
