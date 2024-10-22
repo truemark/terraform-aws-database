@@ -33,7 +33,7 @@ resource "aws_rds_cluster_parameter_group" "db" {
 module "db" {
   # https://registry.terraform.io/modules/terraform-aws-modules/rds-aurora/aws/latest
   source         = "terraform-aws-modules/rds-aurora/aws"
-  version        = "6.1.3"
+  version        = "9.4.0"
   name           = var.name
   database_name  = var.database_name
   engine         = "aurora-postgresql"
@@ -56,7 +56,7 @@ module "db" {
   storage_encrypted               = true
   db_parameter_group_name         = var.db_parameter_group_name == null ? element(aws_db_parameter_group.db.*.name, 1) : var.db_parameter_group_name
   db_cluster_parameter_group_name = var.rds_cluster_parameter_group_name == null ? element(aws_rds_cluster_parameter_group.db.*.name, 1) : var.rds_cluster_parameter_group_name
-  allowed_cidr_blocks             = var.allowed_cidr_blocks
+  #allowed_cidr_blocks             = var.allowed_cidr_blocks
   backup_retention_period         = var.backup_retention_period
   preferred_backup_window         = var.preferred_backup_window
   preferred_maintenance_window    = var.preferred_maintenance_window
@@ -65,7 +65,7 @@ module "db" {
   cluster_tags                    = var.cluster_tags
   copy_tags_to_snapshot           = var.copy_tags_to_snapshot
   security_group_tags             = var.security_group_tags
-  create_random_password          = var.master_password == null
+  #create_random_password          = var.master_password == null
   master_password                 = var.master_password
   master_username                 = var.master_username
   create_security_group           = var.create_security_group
