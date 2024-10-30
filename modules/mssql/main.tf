@@ -263,7 +263,7 @@ resource "aws_iam_policy" "s3_data_archive" {
 }
 
 data "aws_iam_policy_document" "assume_s3_data_archive_role_policy" {
-  count = var.create != null ? 1 : 0
+  count = var.create && var.archive_bucket_name != null ? 1 : 0
   source_policy_documents = [
     data.aws_iam_policy_document.assume_s3_data_archive_role_policy_rds[0].json,
     data.aws_iam_policy_document.share_s3_data_archive_sts[count.index].json
