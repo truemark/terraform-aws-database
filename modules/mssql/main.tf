@@ -233,7 +233,7 @@ resource "aws_db_option_group" "mssql_rds" {
 ################################################################################
 
 resource "aws_db_instance_role_association" "s3_data_archive" {
-  count                  = var.create && var.archive_bucket_name != null && var.share_to_nonprod_account != null ? 1 : 0
+  count                  = var.create && var.archive_bucket_name != null ? 1 : 0
   db_instance_identifier = var.instance_name
   feature_name           = "S3_INTEGRATION"
   role_arn               = join("", aws_iam_role.s3_data_archive.*.arn)
@@ -241,7 +241,7 @@ resource "aws_db_instance_role_association" "s3_data_archive" {
 }
 
 resource "aws_iam_role" "s3_data_archive" {
-  count              = var.create && var.archive_bucket_name != null && var.share_to_nonprod_account != null ? 1 : 0
+  count              = var.create && var.archive_bucket_name != null ? 1 : 0
   name               = "s3-data-archive-${lower(var.instance_name)}"
   assume_role_policy = join("", data.aws_iam_policy_document.assume_s3_data_archive_role_policy.*.json)
   tags               = local.tags
@@ -249,21 +249,21 @@ resource "aws_iam_role" "s3_data_archive" {
 }
 
 resource "aws_iam_role_policy_attachment" "s3_data_archive" {
-  count = var.create && var.archive_bucket_name != null && var.share_to_nonprod_account != null ? 1 : 0
+  count = var.create && var.archive_bucket_name != null ? 1 : 0
   role  = join("", aws_iam_role.s3_data_archive.*.name)
   # The actions the role can execute
   policy_arn = join("", aws_iam_policy.s3_data_archive[*].arn)
 }
 
 resource "aws_iam_policy" "s3_data_archive" {
-  count       = var.create && var.archive_bucket_name != null && var.share_to_nonprod_account != null ? 1 : 0
+  count       = var.create && var.archive_bucket_name != null ? 1 : 0
   name        = "s3-data-archive-${lower(var.instance_name)}"
   description = "Terraform managed RDS Instance policy."
   policy      = join("", data.aws_iam_policy_document.exec_s3_data_archive.*.json)
 }
 
 data "aws_iam_policy_document" "assume_s3_data_archive_role_policy" {
-  count = var.create && var.share_to_nonprod_account != null && var.share_to_nonprod_account != null ? 1 : 0
+  count = var.create != null ? 1 : 0
   source_policy_documents = [
     data.aws_iam_policy_document.assume_s3_data_archive_role_policy_rds[0].json,
     data.aws_iam_policy_document.share_s3_data_archive_sts[count.index].json
@@ -271,7 +271,7 @@ data "aws_iam_policy_document" "assume_s3_data_archive_role_policy" {
 }
 
 data "aws_iam_policy_document" "assume_s3_data_archive_role_policy_rds" {
-  count = var.create && var.archive_bucket_name != null && var.share_to_nonprod_account != null ? 1 : 0
+  count = var.create && var.archive_bucket_name != null ? 1 : 0
   statement {
     actions = [
       "sts:AssumeRole"
