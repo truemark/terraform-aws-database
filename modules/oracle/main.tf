@@ -172,6 +172,13 @@ resource "aws_security_group" "db_security_group" {
     cidr_blocks = var.ingress_cidrs
   }
 
+  ingress {
+    from_port   = 1140
+    to_port     = 1140
+    protocol    = "tcp"
+    cidr_blocks = var.ingress_cidrs
+  }
+
   # TODO Lock this down later
   ingress {
     from_port   = 0
