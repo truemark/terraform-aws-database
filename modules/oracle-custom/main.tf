@@ -150,7 +150,7 @@ data "aws_secretsmanager_secret_version" "db" {
 #-----------------------------------------------------------------------------
 
 resource "aws_security_group" "db_security_group" {
-  name   = local.name
+  name   = var.instance_name
   vpc_id = var.vpc_id
   tags   = local.tags
 
