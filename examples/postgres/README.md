@@ -1,3 +1,4 @@
+```terraform
 provider "aws" {
   region = "us-east-1"
 }
@@ -71,3 +72,4 @@ resource "aws_db_instance" "db-replica" {
   storage_type            = "gp3"
   depends_on              = [ module.db ]
 }
+```

@@ -1,3 +1,4 @@
+```terraform
 module "db" {
   source                       = "truemark/database/aws//modules/mssql"
   version                      = ">=0"
@@ -61,3 +62,4 @@ username = "my username"
       apply_method = "immediate"
     }
   ]
+```

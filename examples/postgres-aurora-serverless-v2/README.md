@@ -1,3 +1,4 @@
+```terraform
 provider "aws" {
   region = "us-east-1"
 }
@@ -49,3 +50,4 @@ module "db" {
   writer_instance_class   = "db.serverless"
   writer_instance_count   = 1
 }
+```

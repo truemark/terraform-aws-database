@@ -1,3 +1,4 @@
+```terraform
 module "db" {
   source                          = "truemark/database/aws//modules/oracle-custom"
   version                         = ">=0"
@@ -37,3 +38,5 @@ module "db" {
   }
   vpc_id                          = "vpc-0a6c8fae7776adb32"
 }
+```
+
