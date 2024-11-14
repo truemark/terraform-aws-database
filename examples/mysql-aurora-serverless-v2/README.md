@@ -1,3 +1,4 @@
+```terraform
 provider "aws" {
   region = "us-east-1"
 }
@@ -60,5 +61,5 @@ module "db" {
   tags                  = local.tags
   vpc_id                = local.vpc_id
 }
-
+```
 

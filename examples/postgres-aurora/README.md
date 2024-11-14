@@ -1,3 +1,4 @@
+```terraform
 provider "aws" {
   region = "us-east-1"
 }
@@ -42,3 +43,4 @@ module "db" {
   subnets                         = data.aws_subnets.private.ids
   vpc_id                          = data.aws_vpc.main.id
 }
+```
