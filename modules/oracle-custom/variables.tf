@@ -133,6 +133,18 @@ variable "ingress_cidrs" {
   default     = ["10.0.0.0/8"]
 }
 
+variable "ingress_rules" {
+  description = "List of ingress rules to apply to the security group"
+  type = list(object({
+    from_port   = number
+    to_port     = number
+    protocol    = string
+    cidr_blocks = list(string)
+    description = string
+  }))
+  default = []
+}
+
 variable "instance_name" {
   description = "Name for the Oracle RDS instance. This will display in the console."
   type        = string
