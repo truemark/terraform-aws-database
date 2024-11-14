@@ -1,5 +1,35 @@
 locals {
   name = lower(var.instance_name != "" ? var.instance_name : var.database_name)
+  default_ingress_rules = [
+    {
+      from_port   = 1521
+      to_port     = 1521
+      protocol    = "tcp"
+      cidr_blocks = var.ingress_cidrs
+      description = "Allow Oracle DB access"
+    },
+    {
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = var.ingress_cidrs
+      description = "Allow SSH access"
+    },
+    {
+      from_port   = 3872
+      to_port     = 3872
+      protocol    = "tcp"
+      cidr_blocks = var.ingress_cidrs
+      description = "Allow application access on port 3872"
+    },
+    {
+      from_port   = 1140
+      to_port     = 1140
+      protocol    = "tcp"
+      cidr_blocks = var.ingress_cidrs
+      description = "Allow application access on port 1140"
+    }
+  ]
   tags = merge(var.tags,
     {
       "automation:component-id"     = "rds-oracle",
@@ -151,40 +181,15 @@ resource "aws_security_group" "db_security_group" {
   vpc_id = var.vpc_id
   tags   = local.tags
 
-  ingress {
-    from_port   = 1521
-    to_port     = 1521
-    protocol    = "tcp"
-    cidr_blocks = var.ingress_cidrs
-  }
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = var.ingress_cidrs
-  }
-
-  ingress {
-    from_port   = 3872
-    to_port     = 3872
-    protocol    = "tcp"
-    cidr_blocks = var.ingress_cidrs
-  }
-
-  ingress {
-    from_port   = 1140
-    to_port     = 1140
-    protocol    = "tcp"
-    cidr_blocks = var.ingress_cidrs
-  }
-
-  # TODO Lock this down later
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = -1
-    cidr_blocks = var.ingress_cidrs
+  dynamic "ingress" {
+    for_each = concat(var.ingress_rules, local.default_ingress_rules)
+    content {
+      from_port   = ingress.value.from_port
+      to_port     = ingress.value.to_port
+      protocol    = ingress.value.protocol
+      cidr_blocks = ingress.value.cidr_blocks
+      description = ingress.value.description
+    }
   }
 
   egress {
