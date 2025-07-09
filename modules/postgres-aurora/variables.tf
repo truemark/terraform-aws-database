@@ -306,3 +306,9 @@ variable "master_password_min_numeric" {
   type        = number
   default     = 1
 }
+
+variable "promotion_tier" {
+  description = "Promotion tier for any read‐replica instances"
+  type        = number
+  default     = 1
+}

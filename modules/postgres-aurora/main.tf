@@ -1,7 +1,11 @@
 locals {
   instances = {
     for n in range(1, var.replica_count + 2) :
-    n => {}
+    n => (
+      n == 1
+      ? {}                                      # primary: no promotion_tier override
+      : { promotion_tier = var.promotion_tier } # each replica: tier = 2 (by default)
+    )
   }
   tags = merge(var.tags,
     {
