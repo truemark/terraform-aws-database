@@ -1,3 +1,0 @@
-# The following contains the next version that will be released when a merge to main occurs
-version=v0.0.4
-next_version=v0.0.5
