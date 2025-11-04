@@ -355,3 +355,18 @@ variable "vpc_security_group_ids" {
   type        = list(string)
   default     = []
 }
+variable "replica_count" {
+  description = "Number of read-only replicas to create."
+  type        = number
+  default     = 0
+}
+variable "replica_instance_class" {
+  description = "Instance class to use for read replicas. If not specified, uses instance_type."
+  type        = string
+  default     = null
+}
+variable "replica_promotion_tier" {
+  description = "Promotion tier for read replicas in multi-AZ scenarios."
+  type        = number
+  default     = null
+}

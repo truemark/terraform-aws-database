@@ -67,3 +67,19 @@ output "master_secret" {
   description = "Master secret"
   value       = module.master_secret
 }
+output "replica_instance_ids" {
+  description = "List of replica instance identifiers"
+  value       = aws_db_instance.replica[*].id
+}
+output "replica_instance_endpoints" {
+  description = "List of replica connection endpoints"
+  value       = aws_db_instance.replica[*].endpoint
+}
+output "replica_instance_addresses" {
+  description = "List of replica addresses"
+  value       = aws_db_instance.replica[*].address
+}
+output "replica_instance_arns" {
+  description = "List of replica instance ARNs"
+  value       = aws_db_instance.replica[*].arn
+}
