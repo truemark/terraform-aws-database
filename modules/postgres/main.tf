@@ -86,7 +86,7 @@ module "db" {
   engine                                = "postgres"
   engine_version                        = var.engine_version
   family                                = var.family
-  identifier                            = var.instance_name
+  identifier                            = var.replica_count == 0 ? var.instance_name : "${var.instance_name}${var.master_name_variable}"
   instance_class                        = var.instance_type
   iops                                  = var.iops
   kms_key_id                            = var.kms_key_arn != null ? var.kms_key_arn : (var.kms_key_id != null) ? join("", data.aws_kms_key.db.*.arn) : (var.kms_key_alias != null) ? join("", data.aws_kms_alias.db.*.target_key_arn) : null

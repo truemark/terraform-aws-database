@@ -196,6 +196,11 @@ variable "major_engine_version" {
   type        = string
   default     = "15.0"
 }
+variable "master_name_variable" {
+  description = "What to append onto the master database if replicas are also included.."
+  type        = string
+  default     = "-master"
+}
 variable "master_user_secret_kms_key_id" {
   description = <<EOF
   The key ARN, key ID, alias ARN or alias name for the KMS key to encrypt the master user password secret in Secrets Manager.
