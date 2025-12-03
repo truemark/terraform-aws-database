@@ -146,7 +146,7 @@ resource "aws_db_parameter_group" "replica" {
 resource "aws_db_instance" "replica" {
   count = var.create_db_instance ? var.replica_count : 0
 
-  identifier     = "${var.instance_name}${replica_name_suffix}-${count.index + 1}"
+  identifier     = "${var.instance_name}${var.replica_name_suffix}-${count.index + 1}"
   instance_class = var.replica_instance_class != null ? var.replica_instance_class : var.instance_type
 
   replicate_source_db = module.db.db_instance_identifier
