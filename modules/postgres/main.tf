@@ -88,7 +88,7 @@ module "db" {
   engine                                = "postgres"
   engine_version                        = var.engine_version
   family                                = var.family
-  identifier                            = var.replica_count == 0 ? var.instance_name : "${var.instance_name}${var.master_name_variable}"
+  identifier                            = "${var.instance_name}${var.writer_name_suffix}"
   instance_class                        = var.instance_type
   iops                                  = var.iops
   kms_key_id                            = var.kms_key_arn != null ? var.kms_key_arn : (var.kms_key_id != null) ? join("", data.aws_kms_key.db.*.arn) : (var.kms_key_alias != null) ? join("", data.aws_kms_alias.db.*.target_key_arn) : null
@@ -146,7 +146,7 @@ resource "aws_db_parameter_group" "replica" {
 resource "aws_db_instance" "replica" {
   count = var.create_db_instance ? var.replica_count : 0
 
-  identifier     = "${var.instance_name}-replica-${count.index + 1}"
+  identifier     = "${var.instance_name}${replica_name_suffix}-${count.index + 1}"
   instance_class = var.replica_instance_class != null ? var.replica_instance_class : var.instance_type
 
   replicate_source_db = module.db.db_instance_identifier

@@ -201,11 +201,6 @@ variable "major_engine_version" {
   type        = string
   default     = "15.0"
 }
-variable "master_name_variable" {
-  description = "What to append onto the master database if replicas are also included.."
-  type        = string
-  default     = "-master"
-}
 variable "master_user_secret_kms_key_id" {
   description = <<EOF
   The key ARN, key ID, alias ARN or alias name for the KMS key to encrypt the master user password secret in Secrets Manager.
@@ -312,6 +307,26 @@ variable "random_password_length" {
   type        = number
   default     = 16
 }
+variable "replica_count" {
+  description = "Number of read-only replicas to create."
+  type        = number
+  default     = 0
+}
+variable "replica_instance_class" {
+  description = "Instance class to use for read replicas. If not specified, uses instance_type."
+  type        = string
+  default     = null
+}
+variable "replica_name_suffix" {
+  description = "What to append onto the master database."
+  type        = string
+  default     = "-replica"
+}
+variable "replica_promotion_tier" {
+  description = "Promotion tier for read replicas in multi-AZ scenarios."
+  type        = number
+  default     = null
+}
 variable "replicate_source_db" {
   description = "The DB instance identifier of the master db."
   type        = string
@@ -365,18 +380,8 @@ variable "vpc_security_group_ids" {
   type        = list(string)
   default     = []
 }
-variable "replica_count" {
-  description = "Number of read-only replicas to create."
-  type        = number
-  default     = 0
-}
-variable "replica_instance_class" {
-  description = "Instance class to use for read replicas. If not specified, uses instance_type."
+variable "writer_name_suffix" {
+  description = "What to append onto the master database."
   type        = string
-  default     = null
-}
-variable "replica_promotion_tier" {
-  description = "Promotion tier for read replicas in multi-AZ scenarios."
-  type        = number
-  default     = null
+  default     = ""
 }
