@@ -74,6 +74,7 @@ module "db" {
 
   allocated_storage                     = var.allocated_storage
   apply_immediately                     = var.apply_immediately
+  allow_major_version_upgrade           = var.allow_major_version_upgrade 
   auto_minor_version_upgrade            = var.auto_minor_version_upgrade
   backup_retention_period               = var.backup_retention_period
   ca_cert_identifier                    = var.ca_cert_identifier
