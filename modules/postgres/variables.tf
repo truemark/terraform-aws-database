@@ -101,6 +101,11 @@ variable "db_parameters" {
   type        = list(map(any))
   default     = []
 }
+variable "db_replica_parameters" {
+  description = "Map of parameters to use in the aws_db_parameter_group resource"
+  type        = list(map(any))
+  default     = []
+}
 variable "db_subnet_group_description" {
   description = "Description of the DB subnet group to create"
   type        = string

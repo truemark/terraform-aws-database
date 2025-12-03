@@ -8,6 +8,8 @@ locals {
       "automation:component-vendor" = "TrueMark",
       "backup:policy"               = var.backup_policy,
   })
+
+  has_replica_params = length(var.db_replica_parameters) > 0
 }
 data "aws_kms_alias" "db" {
   count = var.create_db_instance && var.kms_key_arn == null && var.kms_key_id == null && var.kms_key_alias != null ? 1 : 0
@@ -126,6 +128,21 @@ module "master_secret" {
   depends_on    = [module.db]
 }
 
+resource "aws_db_parameter_group" "replica" {
+  count  = local.has_replica_params ? 1 : 0
+  name   = "${var.instance_name}-replica"
+  family = var.family
+
+  dynamic "parameter" {
+    for_each = var.db_replica_parameters
+    content {
+      name         = parameter.value.name
+      value        = parameter.value.value
+      apply_method = lookup(parameter.value, "apply_method", "pending-reboot")
+    }
+  }
+}
+
 resource "aws_db_instance" "replica" {
   count = var.create_db_instance ? var.replica_count : 0
 
@@ -147,7 +164,7 @@ resource "aws_db_instance" "replica" {
   monitoring_interval                   = var.monitoring_interval
   monitoring_role_arn                   = join("", aws_iam_role.rds_enhanced_monitoring.*.arn)
   multi_az                              = var.multi_az
-  parameter_group_name                  = module.db.db_parameter_group_id
+  parameter_group_name                  = local.has_replica_params ? aws_db_parameter_group.replica[0].name : module.db.db_parameter_group_id
   performance_insights_enabled          = var.performance_insights_enabled
   performance_insights_retention_period = var.performance_insights_retention_period
   performance_insights_kms_key_id       = var.performance_insights_kms_key_id
