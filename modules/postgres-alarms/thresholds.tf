@@ -3,7 +3,7 @@ locals {
 
     # Each one of these static alarms has a default threshold.
     CheckpointLagEvaluationPeriods             = min(max(var.checkpoint_lag_evaluation_periods, 1), 10)
-    CheckpointLagThreshold                     = min(var.checkpoint_lag_threshold, 600) # 10 minutes
+    CheckpointLagThreshold                     = max(var.checkpoint_lag_threshold, 600) # 10 minutes
     CPUUtilizationEvaluationPeriods            = min(var.cpu_utilization_evaluation_periods, 10)
     CPUUtilizationThreshold                    = min(max(var.cpu_utilization_threshold, 1), 100)
     DatabaseConnectionsEvaluationPeriods       = min(max(var.db_connections_evaluation_periods, 1), 10)
