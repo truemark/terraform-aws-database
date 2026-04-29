@@ -1,49 +1,49 @@
-locals {                                                                                                                       
-    instances = {                                                                                                                
-      for n in range(1, var.replica_count + 2) :                                                                                 
-      n => merge(                                                                                                                
-        {         
-          #identifier                            = n == 1 ? var.name : "${var.name}-${n}"       
-          identifier = "${var.name}-${n}"                                  
-          instance_class                        = var.instance_class                                                             
-          publicly_accessible                   = false                                                                          
-          db_parameter_group_name              = var.db_parameter_group_name == null ? element(aws_db_parameter_group.db.*.name, 0) : var.db_parameter_group_name                                                                                               
-          auto_minor_version_upgrade           = var.auto_minor_version_upgrade                                                  
-          ca_cert_identifier                   = var.ca_cert_identifier                                                          
-          monitoring_interval                  = 60                                                                              
-          performance_insights_enabled         = var.performance_insights_enabled                                                
-          performance_insights_kms_key_id      = var.performance_insights_kms_key_id                                             
-          performance_insights_retention_period = var.performance_insights_retention_period                                      
-        },                                                                                                                       
-        n == 1 ? {} : { promotion_tier = var.promotion_tier }                                                                    
-      )                                                                                                                          
-    }                                                                                                                            
-                                                                                                                                 
-    tags = merge(var.tags,                                                                                                       
-      {           
-        "automation:component-id"     = "rds-aurora-postgres",                                                                   
-        "automation:component-url"    = "https://registry.terraform.io/modules/truemark/database/aws/latest/submodules/aurora-postgres",                               
-        "automation:component-vendor" = "TrueMark",                                                                              
-        "backup:policy"               = var.backup_policy,                                                                       
-    })                                                                                                                           
-                                                                                                                                 
-    security_group_rules = {                                                                                                     
-      ingress = {                                                                                                                
-        type        = "ingress"                                                                                                  
-        from_port   = 5432                                                                                                       
-        to_port     = 5432                                                                                                       
-        protocol    = "tcp"                                                                                                      
-        cidr_blocks = var.ingress_cidrs                                                                                          
-      }                                                                                                                          
-      egress = {                                                                                                                 
-        type        = "egress"                                                                                                   
-        from_port   = 0                                                                                                          
-        to_port     = 0                                                                                                          
-        protocol    = "-1"                                                                                                       
-        cidr_blocks = var.egress_cidrs                                                                                           
-      }                                                                                                                          
-    }                                                                                                                            
-  }   
+locals {
+  instances = {
+    for n in range(1, var.replica_count + 2) :
+    n => merge(
+      {
+        #identifier                            = n == 1 ? var.name : "${var.name}-${n}"       
+        identifier                            = "${var.name}-${n}"
+        instance_class                        = var.instance_class
+        publicly_accessible                   = false
+        db_parameter_group_name               = var.db_parameter_group_name == null ? element(aws_db_parameter_group.db.*.name, 0) : var.db_parameter_group_name
+        auto_minor_version_upgrade            = var.auto_minor_version_upgrade
+        ca_cert_identifier                    = var.ca_cert_identifier
+        monitoring_interval                   = 60
+        performance_insights_enabled          = var.performance_insights_enabled
+        performance_insights_kms_key_id       = var.performance_insights_kms_key_id
+        performance_insights_retention_period = var.performance_insights_retention_period
+      },
+      n == 1 ? {} : { promotion_tier = var.promotion_tier }
+    )
+  }
+
+  tags = merge(var.tags,
+    {
+      "automation:component-id"     = "rds-aurora-postgres",
+      "automation:component-url"    = "https://registry.terraform.io/modules/truemark/database/aws/latest/submodules/aurora-postgres",
+      "automation:component-vendor" = "TrueMark",
+      "backup:policy"               = var.backup_policy,
+  })
+
+  security_group_rules = {
+    ingress = {
+      type        = "ingress"
+      from_port   = 5432
+      to_port     = 5432
+      protocol    = "tcp"
+      cidr_blocks = var.ingress_cidrs
+    }
+    egress = {
+      type        = "egress"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = var.egress_cidrs
+    }
+  }
+}
 
 resource "aws_db_parameter_group" "db" {
   count       = var.create && var.db_parameter_group_name == null ? 1 : 0
@@ -77,60 +77,60 @@ resource "aws_rds_cluster_parameter_group" "db" {
   tags = merge(local.tags, var.rds_cluster_parameter_group_tags)
 }
 
-module "db" {                                                                                                                  
-    # https://registry.terraform.io/modules/terraform-aws-modules/rds-aurora/aws/latest                                          
-    source  = "terraform-aws-modules/rds-aurora/aws"                                                                             
-    version = "10.2.0"                                                                                                           
-                                                                                                                                 
-    apply_immediately            = var.apply_immediately                                                                         
-    allow_major_version_upgrade  = var.allow_major_version_upgrade                                                               
-    backup_retention_period      = var.backup_retention_period                                                                   
-    cluster_tags                 = var.cluster_tags                                                                              
-    copy_tags_to_snapshot        = var.copy_tags_to_snapshot                                                                     
-    create_db_subnet_group       = var.create_db_subnet_group                                                                    
-    create_security_group        = var.create_security_group                                                                     
-    database_name                = var.database_name                                                                             
-    deletion_protection          = var.deletion_protection
-    enabled_cloudwatch_logs_exports = ["postgresql"]                                                                             
-    engine                       = "aurora-postgresql"                                                                           
-    engine_mode                  = "provisioned"                                                                                 
-    engine_version               = var.engine_version                                                                            
-    instances                    = local.instances                                                                               
-    kms_key_id                   = var.kms_key_id                                                                                
-    manage_master_user_password  = var.manage_master_user_password                                                               
-    master_username              = var.master_username                                                                           
-    name                         = var.name                                                                                      
-    preferred_backup_window      = var.preferred_backup_window                                                                   
-    preferred_maintenance_window = var.preferred_maintenance_window                                                              
-    security_group_tags          = var.security_group_tags                                                                       
-    security_group_description   = var.security_group_description     
-    skip_final_snapshot          = var.skip_final_snapshot                                                                       
-    snapshot_identifier          = var.snapshot_identifier                                                                       
-    storage_encrypted            = true                                                                                          
-    subnets                      = var.subnets                                                                                   
-    tags                         = local.tags                                                                                    
-    vpc_id                       = var.vpc_id                                                                                    
-  }                                                                                                                              
+module "db" {
+  # https://registry.terraform.io/modules/terraform-aws-modules/rds-aurora/aws/latest                                          
+  source  = "terraform-aws-modules/rds-aurora/aws"
+  version = "10.2.0"
 
-resource "aws_security_group_rule" "ingress" {                                                                                 
-  count             = var.create && var.create_security_group ? 1 : 0                                                          
-  type              = "ingress"                                                                                                
-  from_port         = 5432                                                                                                     
-  to_port           = 5432                                                                                                     
-  protocol          = "tcp"                                                                                                    
-  cidr_blocks       = var.ingress_cidrs                                                                                        
-  security_group_id = module.db.security_group_id                                                                              
-}                                                                                                                              
-                                                                                                                                 
-resource "aws_security_group_rule" "egress" {                        
-  count             = var.create && var.create_security_group ? 1 : 0                                                          
-  type              = "egress"                                                                                                 
-  from_port         = 0                                                                                                        
-  to_port           = 0                                                                                                        
-  protocol          = "-1"                                                                                                     
-  cidr_blocks       = var.egress_cidrs                                                                                         
-  security_group_id = module.db.security_group_id                                                                              
-}                                                                                                                              
+  apply_immediately               = var.apply_immediately
+  allow_major_version_upgrade     = var.allow_major_version_upgrade
+  backup_retention_period         = var.backup_retention_period
+  cluster_tags                    = var.cluster_tags
+  copy_tags_to_snapshot           = var.copy_tags_to_snapshot
+  create_db_subnet_group          = var.create_db_subnet_group
+  create_security_group           = var.create_security_group
+  database_name                   = var.database_name
+  deletion_protection             = var.deletion_protection
+  enabled_cloudwatch_logs_exports = ["postgresql"]
+  engine                          = "aurora-postgresql"
+  engine_mode                     = "provisioned"
+  engine_version                  = var.engine_version
+  instances                       = local.instances
+  kms_key_id                      = var.kms_key_id
+  manage_master_user_password     = var.manage_master_user_password
+  master_username                 = var.master_username
+  name                            = var.name
+  preferred_backup_window         = var.preferred_backup_window
+  preferred_maintenance_window    = var.preferred_maintenance_window
+  security_group_tags             = var.security_group_tags
+  security_group_description      = var.security_group_description
+  skip_final_snapshot             = var.skip_final_snapshot
+  snapshot_identifier             = var.snapshot_identifier
+  storage_encrypted               = true
+  subnets                         = var.subnets
+  tags                            = local.tags
+  vpc_id                          = var.vpc_id
+}
+
+resource "aws_security_group_rule" "ingress" {
+  count             = var.create && var.create_security_group ? 1 : 0
+  type              = "ingress"
+  from_port         = 5432
+  to_port           = 5432
+  protocol          = "tcp"
+  cidr_blocks       = var.ingress_cidrs
+  security_group_id = module.db.security_group_id
+}
+
+resource "aws_security_group_rule" "egress" {
+  count             = var.create && var.create_security_group ? 1 : 0
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = var.egress_cidrs
+  security_group_id = module.db.security_group_id
+}
 
 resource "aws_ram_resource_share" "db" {
   count                     = var.create && var.share ? 1 : 0
