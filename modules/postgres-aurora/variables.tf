@@ -163,7 +163,7 @@ variable "performance_insights_kms_key_id" {
 variable "performance_insights_retention_period" {
   description = "Amount of time in days to retain Performance Insights data. Either 7 (7 days) or 731 (2 years)"
   type        = number
-  default     = null
+  default     = 7 #null
 }
 variable "preferred_backup_window" {
   description = "When to perform DB backups"
