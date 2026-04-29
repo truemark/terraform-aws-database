@@ -62,7 +62,7 @@ output "cluster_port" {
 
 output "cluster_master_password" {
   description = "The database master password"
-  value       = module.db.cluster_master_password
+  value = var.manage_master_user_password ? "" : (var.master_password != null ? var.master_password : random_password.master_password.result)
   sensitive   = true
 }
 
