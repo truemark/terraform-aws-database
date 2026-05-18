@@ -11,9 +11,6 @@ locals {
         auto_minor_version_upgrade = var.auto_minor_version_upgrade
         ca_cert_identifier         = var.ca_cert_identifier
         monitoring_interval        = 60
-        #        performance_insights_enabled          = var.performance_insights_enabled
-        #        performance_insights_kms_key_id       = var.performance_insights_kms_key_id
-        #        performance_insights_retention_period = var.performance_insights_retention_period
       },
       n == 1 ? {} : { promotion_tier = var.promotion_tier }
     )
