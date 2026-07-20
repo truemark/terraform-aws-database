@@ -42,8 +42,11 @@ resource "aws_iam_role_policy_attachment" "redshift_full_access" {
 # Secrets Manager
 # -----------------------
 resource "random_password" "redshift_password" {
-  length  = 16
-  special = false
+  length      = 16
+  special     = false
+  min_numeric = 1
+  min_upper   = 1
+  min_lower   = 1
 }
 
 resource "aws_secretsmanager_secret" "redshift_secret" {
