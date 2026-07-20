@@ -51,7 +51,7 @@ resource "aws_secretsmanager_secret" "redshift_secret" {
 }
 
 resource "aws_secretsmanager_secret_version" "redshift_secret_version" {
-  secret_id     = aws_secretsmanager_secret.redshift_secret.id
+  secret_id = aws_secretsmanager_secret.redshift_secret.id
   secret_string = jsonencode({
     username = var.admin_user,
     password = random_password.redshift_password.result
@@ -62,11 +62,11 @@ resource "aws_secretsmanager_secret_version" "redshift_secret_version" {
 # Redshift Namespace
 # -----------------------
 resource "aws_redshiftserverless_namespace" "namespace" {
-  namespace_name = var.namespace_name
-  db_name        = var.database_name
-  admin_username = var.admin_user
+  namespace_name      = var.namespace_name
+  db_name             = var.database_name
+  admin_username      = var.admin_user
   admin_user_password = random_password.redshift_password.result
-  iam_roles      = [aws_iam_role.redshift_serverless_role.arn]
+  iam_roles           = [aws_iam_role.redshift_serverless_role.arn]
 }
 
 # -----------------------
@@ -96,12 +96,12 @@ resource "aws_security_group" "redshift_security_group" {
 # Redshift Workgroup
 # -----------------------
 resource "aws_redshiftserverless_workgroup" "workgroup" {
-  workgroup_name     = var.workgroup_name
-  namespace_name     = aws_redshiftserverless_namespace.namespace.namespace_name
-  base_capacity      = var.base_capacity
-  publicly_accessible = false
-  enhanced_vpc_routing = true
-  security_group_ids = [aws_security_group.redshift_security_group.id]
-  subnet_ids         = var.subnet_ids
-  
+  workgroup_name       = var.workgroup_name
+  namespace_name       = aws_redshiftserverless_namespace.namespace.namespace_name
+  base_capacity        = var.base_capacity
+  publicly_accessible  = var.publicly_accessible
+  enhanced_vpc_routing = var.enhanced_vpc_routing
+  security_group_ids   = [aws_security_group.redshift_security_group.id]
+  subnet_ids           = var.subnet_ids
+
 }
