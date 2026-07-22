@@ -50,7 +50,8 @@ resource "random_password" "redshift_password" {
 }
 
 resource "aws_secretsmanager_secret" "redshift_secret" {
-  name = "${var.namespace_name}-admin-secret"
+  name                    = "${var.namespace_name}-admin-secret"
+  recovery_window_in_days = 0
 }
 
 resource "aws_secretsmanager_secret_version" "redshift_secret_version" {
