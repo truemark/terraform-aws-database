@@ -120,6 +120,13 @@ module "db" {
 # Optional read replica. Engine, engine_version, username, password, db_name,
 # kms_key_id, and db_subnet_group_name are intentionally omitted - for a
 # same-region replica these are inherited from the source instance.
+resource "time_sleep" "wait_for_master" {
+  count = var.create_read_replica ? 1 : 0
+
+  depends_on      = [module.db]
+  create_duration = var.read_replica_creation_delay
+}
+
 resource "aws_db_instance" "read_replica" {
   count = var.create_read_replica ? 1 : 0
 
@@ -131,6 +138,7 @@ resource "aws_db_instance" "read_replica" {
   vpc_security_group_ids = [aws_security_group.db_security_group.id]
 
   storage_type               = var.storage_type
+  storage_encrypted          = true
   iops                       = var.master_iops
   auto_minor_version_upgrade = var.auto_minor_version_upgrade
   apply_immediately          = var.apply_immediately
@@ -145,7 +153,7 @@ resource "aws_db_instance" "read_replica" {
     delete = "${var.db_instance_delete_timeout}m"
   }
 
-  depends_on = [module.db]
+  depends_on = [time_sleep.wait_for_master]
 }
 
 #-----------------------------------------------------------------------------

@@ -320,6 +320,12 @@ variable "random_password_length" {
   default     = 16
 }
 
+variable "read_replica_creation_delay" {
+  description = "How long to wait after the master instance is ready before creating the read replica, to avoid RDS transient states (e.g. the initial automated backup) rejecting CreateDBInstanceReadReplica"
+  type        = string
+  default     = "1m"
+}
+
 variable "replica_deletion_protection" {
   description = "Enable deletion protection on the read replica"
   type        = bool
