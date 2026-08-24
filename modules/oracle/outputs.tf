@@ -83,3 +83,18 @@ output "db_security_group_id" {
   description = "The ID of the security group associated with the RDS instance"
   value       = aws_security_group.db_security_group.id
 }
+
+output "read_replica_db_instance_address" {
+  description = "The address of the read replica, if created"
+  value       = try(aws_db_instance.read_replica[0].address, null)
+}
+
+output "read_replica_db_instance_arn" {
+  description = "The ARN of the read replica, if created"
+  value       = try(aws_db_instance.read_replica[0].arn, null)
+}
+
+output "read_replica_db_instance_endpoint" {
+  description = "The connection endpoint of the read replica, if created"
+  value       = try(aws_db_instance.read_replica[0].endpoint, null)
+}

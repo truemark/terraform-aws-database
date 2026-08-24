@@ -117,6 +117,46 @@ module "db" {
 }
 
 #-----------------------------------------------------------------------------
+# Optional read replica. Engine, engine_version, username, password, db_name,
+# kms_key_id, and db_subnet_group_name are intentionally omitted - for a
+# same-region replica these are inherited from the source instance.
+resource "time_sleep" "wait_for_master" {
+  count = var.create_read_replica ? 1 : 0
+
+  depends_on      = [module.db]
+  create_duration = var.read_replica_creation_delay
+}
+
+resource "aws_db_instance" "read_replica" {
+  count = var.create_read_replica ? 1 : 0
+
+  identifier          = "${local.name}-rr"
+  replicate_source_db = module.db.db_instance_arn
+  replica_mode        = var.replica_mode
+
+  instance_class         = coalesce(var.replica_instance_type, var.instance_type)
+  vpc_security_group_ids = [aws_security_group.db_security_group.id]
+
+  storage_type               = var.storage_type
+  storage_encrypted          = true
+  iops                       = var.master_iops
+  auto_minor_version_upgrade = var.auto_minor_version_upgrade
+  apply_immediately          = var.apply_immediately
+  deletion_protection        = var.replica_deletion_protection
+  skip_final_snapshot        = true
+
+  tags = merge(local.tags, { "yleo:role" = "read-replica" })
+
+  timeouts {
+    create = "${var.db_instance_create_timeout}m"
+    update = "${var.db_instance_update_timeout}m"
+    delete = "${var.db_instance_delete_timeout}m"
+  }
+
+  depends_on = [time_sleep.wait_for_master]
+}
+
+#-----------------------------------------------------------------------------
 # Define the paramter group explicitly. Do not let the db module above
 # create it. This is all to get around the issue with Oracle requiring
 # database names to be in CAPS and

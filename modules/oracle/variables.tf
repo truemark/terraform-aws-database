@@ -80,6 +80,12 @@ variable "create_random_password" {
   default     = false
 }
 
+variable "create_read_replica" {
+  description = "Whether to create a read replica of this Oracle instance"
+  type        = bool
+  default     = false
+}
+
 variable "create_security_group" {
   description = "Whether to create the security group for the RDS instance"
   default     = true
@@ -312,6 +318,30 @@ variable "preferred_maintenance_window" {
 variable "random_password_length" {
   description = "The length of the password to generate for root user."
   default     = 16
+}
+
+variable "read_replica_creation_delay" {
+  description = "How long to wait after the master instance is ready before creating the read replica, to avoid RDS transient states (e.g. the initial automated backup) rejecting CreateDBInstanceReadReplica"
+  type        = string
+  default     = "1m"
+}
+
+variable "replica_deletion_protection" {
+  description = "Enable deletion protection on the read replica"
+  type        = bool
+  default     = false
+}
+
+variable "replica_instance_type" {
+  description = "Instance type for the read replica. Defaults to instance_type if not set."
+  type        = string
+  default     = null
+}
+
+variable "replica_mode" {
+  description = "Replica mode for the read replica: 'open-read-only' (queryable, requires Active Data Guard licensing) or 'mounted' (not queryable, DR/promotion only)"
+  type        = string
+  default     = "open-read-only"
 }
 
 variable "security_group_tags" {
