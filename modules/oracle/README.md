@@ -51,6 +51,7 @@ module "db" {
   allocated_storage               = 100
   auto_minor_version_upgrade      = false
   archive_bucket_name             = "my-archive-bucket-name"
+  backup_policy                   = "default-week"
   ca_cert_identifier              = "rds-ca-rsa2048-g1"
   create_db_option_group          = true
   database_name = "DB_NAME"
@@ -75,6 +76,15 @@ module "db" {
   family                          = "oracle-ee-19"
   engine_version                  = "19.0.0.0.ru-2023-01.rur-2023-01.r2"
   ingress_cidrs                   = ["10.0.0.0/8"]
+  ingress_rules = [
+    {
+      from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
+      cidr_blocks = ["10.0.0.0/8"]
+      description = "Allow HTTPS access"
+    }
+  ]
   instance_name                   = "INSTANCE_NAME"
   instance_type                   = "db.r6i.xlarge"
   kms_key_id                      = "alias/shared"
@@ -96,6 +106,15 @@ module "db" {
     "description"                 = "description"
   }
   vpc_id                          = data.aws_vpc.main.id
+
+  # Optional same-region read replica. Engine, engine_version, username,
+  # password, db_name, kms_key_id, and db_subnet_group_name are inherited
+  # from the source instance and cannot be overridden here.
+  create_read_replica             = true
+  replica_mode                    = "open-read-only" # or "mounted"
+  replica_instance_type           = "db.r6i.large"   # defaults to instance_type if unset
+  replica_deletion_protection     = true
+  read_replica_creation_delay     = "5m"
 }
 ```
 ## Parameters
@@ -107,6 +126,7 @@ The following parameters are supported:
 - apply_immediately
 - archive_bucket_name
 - auto_minor_version_upgrade
+- backup_policy
 - backup_retention_period
 - ca_cert_identifier
 - copy_tags_to_snapshot
@@ -114,6 +134,7 @@ The following parameters are supported:
 - create_db_parameter_group
 - create_db_subnet_group
 - create_random_password
+- create_read_replica
 - create_security_group
 - database_name
 - db_instance_create_timeout
@@ -129,6 +150,7 @@ The following parameters are supported:
 - engine_version
 - family
 - ingress_cidrs
+- ingress_rules
 - instance_name
 - instance_type
 - kms_key_id
@@ -152,6 +174,10 @@ The following parameters are supported:
 - preferred_backup_window
 - preferred_maintenance_window
 - random_password_length
+- read_replica_creation_delay
+- replica_deletion_protection
+- replica_instance_type
+- replica_mode
 - security_group_tags
 - skip_final_snapshot
 - snapshot_identifier
