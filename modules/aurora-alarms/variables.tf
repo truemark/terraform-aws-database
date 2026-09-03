@@ -125,6 +125,30 @@ variable "percent_free_memory_evaluation_periods" {
   default     = 5
 }
 
+variable "enable_database_connections_high_alarm" {
+  description = "Toggle to create database_connections_high alarm."
+  type        = bool
+  default     = true
+}
+
+variable "database_connections_threshold" {
+  description = "The number of connections that triggers the alarm. The alarm is not created unless this is set."
+  type        = number
+  default     = 0
+}
+
+variable "database_connections_evaluation_periods" {
+  description = "The number of periods threshold must be breached to alarm."
+  type        = number
+  default     = 5
+}
+
+variable "database_connections_data_points_to_alarm" {
+  description = "The number of datapoints that must be breaching to trigger the alarm."
+  type        = number
+  default     = 3
+}
+
 variable "sns_topic_name" {
   description = "The name of the SNS topic to publish alerts to."
   type        = string

@@ -146,58 +146,58 @@ locals {
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm#example-with-an-expression
-resource "aws_cloudwatch_metric_alarm" "percent_free_memory_low" {
-  for_each                  = var.db_cluster_members
-  alarm_name                = "${each.key}_percent_free_memory_low"
-  actions_enabled           = var.enable_percent_free_memory_low_alarm
-  comparison_operator       = "GreaterThanThreshold"
-  evaluation_periods        = local.thresholds["PercentFreeMemoryEvaluationPeriods"]
-  threshold                 = local.thresholds["PercentFreeMemoryThreshold"]
-  alarm_description         = "Percent of freeable memory is low."
-  alarm_actions             = [data.aws_sns_topic.notification_topic.arn]
-  ok_actions                = [data.aws_sns_topic.notification_topic.arn]
-  insufficient_data_actions = [data.aws_sns_topic.notification_topic.arn]
-  treat_missing_data        = "breaching"
-  tags                      = var.tags
-
-  metric_query {
-    id          = "e1"
-    expression  = "m2/(m1*1024)*100"
-    label       = "% Freeable Memory"
-    return_data = "true"
-  }
-
-  metric_query {
-    id = "m2"
-
-    metric {
-      metric_name = "FreeableMemory"
-      namespace   = "AWS/RDS"
-      period      = "60"
-      stat        = "Minimum"
-      unit        = "Bytes"
-      dimensions = {
-        "rds-instance" = "${each.key}"
-      }
-    }
-  }
-
-  metric_query {
-    id = "m1"
-
-    metric {
-      metric_name = "RDS-total-memory"
-      namespace   = "YL"
-      period      = "60"
-      stat        = "Maximum"
-      unit        = "Kilobytes"
-      dimensions = {
-        "rds-instance" = "${each.key}"
-      }
-    }
-  }
-
-}
+# resource "aws_cloudwatch_metric_alarm" "percent_free_memory_low" {
+#   for_each                  = var.db_cluster_members
+#   alarm_name                = "${each.key}_percent_free_memory_low"
+#   actions_enabled           = var.enable_percent_free_memory_low_alarm
+#   comparison_operator       = "GreaterThanThreshold"
+#   evaluation_periods        = local.thresholds["PercentFreeMemoryEvaluationPeriods"]
+#   threshold                 = local.thresholds["PercentFreeMemoryThreshold"]
+#   alarm_description         = "Percent of freeable memory is low."
+#   alarm_actions             = [data.aws_sns_topic.notification_topic.arn]
+#   ok_actions                = [data.aws_sns_topic.notification_topic.arn]
+#   insufficient_data_actions = [data.aws_sns_topic.notification_topic.arn]
+#   treat_missing_data        = "breaching"
+#   tags                      = var.tags
+#
+#   metric_query {
+#     id          = "e1"
+#     expression  = "m2/(m1*1024)*100"
+#     label       = "% Freeable Memory"
+#     return_data = "true"
+#   }
+#
+#   metric_query {
+#     id = "m2"
+#
+#     metric {
+#       metric_name = "FreeableMemory"
+#       namespace   = "AWS/RDS"
+#       period      = "60"
+#       stat        = "Minimum"
+#       unit        = "Bytes"
+#       dimensions = {
+#         "rds-instance" = "${each.key}"
+#       }
+#     }
+#   }
+#
+#   metric_query {
+#     id = "m1"
+#
+#     metric {
+#       metric_name = "RDS-total-memory"
+#       namespace   = "YL"
+#       period      = "60"
+#       stat        = "Maximum"
+#       unit        = "Kilobytes"
+#       dimensions = {
+#         "rds-instance" = "${each.key}"
+#       }
+#     }
+#   }
+#
+# }
 
 resource "aws_cloudwatch_metric_alarm" "cpu_utilization_high" {
   for_each                  = var.db_cluster_members
@@ -298,6 +298,39 @@ resource "aws_cloudwatch_metric_alarm" "swap_usage_high" {
   statistic                 = "Average"
   threshold                 = local.thresholds["SwapUsageThreshold"]
   alarm_description         = "Average database swap usage too high, performance may suffer"
+  alarm_actions             = [data.aws_sns_topic.notification_topic.arn]
+  ok_actions                = [data.aws_sns_topic.notification_topic.arn]
+  insufficient_data_actions = [data.aws_sns_topic.notification_topic.arn]
+  tags                      = var.tags
+  treat_missing_data        = "breaching"
+  dimensions = {
+    DBInstanceIdentifier = each.key
+  }
+}
+
+locals {
+  connection_thresholds = {
+    # When no threshold is supplied this resolves to 0 and the alarm below is
+    # not created.
+    DatabaseConnectionsThreshold         = floor(max(var.database_connections_threshold, 0))
+    DatabaseConnectionsEvaluationPeriods = max(var.database_connections_evaluation_periods, 0)
+    DatabaseConnectionsDataPointsToAlarm = max(var.database_connections_data_points_to_alarm, 0)
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "database_connections_high" {
+  for_each                  = local.connection_thresholds["DatabaseConnectionsThreshold"] > 0 ? var.db_cluster_members : []
+  alarm_name                = "${each.key}_database_connections_high"
+  actions_enabled           = var.enable_database_connections_high_alarm
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  datapoints_to_alarm       = local.connection_thresholds["DatabaseConnectionsDataPointsToAlarm"]
+  evaluation_periods        = local.connection_thresholds["DatabaseConnectionsEvaluationPeriods"]
+  metric_name               = "DatabaseConnections"
+  namespace                 = "AWS/RDS"
+  period                    = "60"
+  statistic                 = "Maximum"
+  threshold                 = local.connection_thresholds["DatabaseConnectionsThreshold"]
+  alarm_description         = "Database connection count too high, new connections may start being refused"
   alarm_actions             = [data.aws_sns_topic.notification_topic.arn]
   ok_actions                = [data.aws_sns_topic.notification_topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.notification_topic.arn]
