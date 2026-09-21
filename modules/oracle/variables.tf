@@ -338,6 +338,12 @@ variable "replica_instance_type" {
   default     = null
 }
 
+variable "replica_max_allocated_storage" {
+  description = "Specifies the value for Storage Autoscaling on the read replica. Defaults to max_allocated_storage if not set, which matches the value RDS inherits from the source instance at replica creation."
+  type        = number
+  default     = null
+}
+
 variable "replica_mode" {
   description = "Replica mode for the read replica: 'open-read-only' (queryable, requires Active Data Guard licensing) or 'mounted' (not queryable, DR/promotion only)"
   type        = string

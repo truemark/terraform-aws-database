@@ -137,9 +137,14 @@ resource "aws_db_instance" "read_replica" {
   instance_class         = coalesce(var.replica_instance_type, var.instance_type)
   vpc_security_group_ids = [aws_security_group.db_security_group.id]
 
-  storage_type               = var.storage_type
-  storage_encrypted          = true
-  iops                       = var.master_iops
+  storage_type      = var.storage_type
+  storage_encrypted = true
+  iops              = var.master_iops
+  # Not Computed in the provider, so omitting this means "set to null" rather
+  # than "leave alone". RDS copies the source instance's value at replica
+  # creation, so without this the first apply after create always proposes
+  # tearing autoscaling back off.
+  max_allocated_storage      = coalesce(var.replica_max_allocated_storage, var.max_allocated_storage)
   auto_minor_version_upgrade = var.auto_minor_version_upgrade
   apply_immediately          = var.apply_immediately
   deletion_protection        = var.replica_deletion_protection
