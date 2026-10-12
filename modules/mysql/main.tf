@@ -7,6 +7,8 @@ locals {
       "automation:component-vendor" = "TrueMark",
       "backup:policy"               = var.backup_policy,
   })
+
+  kms_key_arn = var.kms_key_arn != null ? var.kms_key_arn : var.kms_key_id != null ? join("", data.aws_kms_key.db.*.arn) : var.kms_key_alias != null ? join("", data.aws_kms_alias.db.*.target_key_arn) : null
 }
 
 data "aws_kms_alias" "db" {
@@ -98,7 +100,7 @@ module "db" {
   identifier                            = var.instance_name
   instance_class                        = var.instance_type
   iops                                  = var.iops
-  kms_key_id                            = var.kms_key_arn
+  kms_key_id                            = local.kms_key_arn
   major_engine_version                  = var.major_engine_version
   manage_master_user_password           = var.manage_master_user_password
   max_allocated_storage                 = var.max_allocated_storage
