@@ -14,7 +14,7 @@ resource "aws_cloudwatch_metric_alarm" "master_cpu_utilization_high" {
   alarm_actions             = [data.aws_sns_topic.topic.arn]
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   tags                      = var.tags
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
@@ -35,7 +35,7 @@ resource "aws_cloudwatch_metric_alarm" "master_db_connections_high" {
   alarm_actions             = [data.aws_sns_topic.topic.arn]
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   tags                      = var.tags
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
@@ -56,7 +56,7 @@ resource "aws_cloudwatch_metric_alarm" "master_disk_queue_depth_high" {
   alarm_actions             = [data.aws_sns_topic.topic.arn]
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   tags                      = var.tags
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
@@ -78,7 +78,7 @@ resource "aws_cloudwatch_metric_alarm" "master_freeable_memory_low" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
   }
@@ -118,7 +118,7 @@ resource "aws_cloudwatch_metric_alarm" "master_swap_usage_high" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
   }
@@ -139,7 +139,7 @@ resource "aws_cloudwatch_metric_alarm" "master_local_storage_pct_low" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     rds-instance = var.db_instance_id
   }
@@ -160,7 +160,7 @@ resource "aws_cloudwatch_metric_alarm" "master_checkpoint_lag_high" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
   }
@@ -181,7 +181,7 @@ resource "aws_cloudwatch_metric_alarm" "master_read_iops_high" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
   }
@@ -202,7 +202,7 @@ resource "aws_cloudwatch_metric_alarm" "master_write_iops_high" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
   }
@@ -223,7 +223,7 @@ resource "aws_cloudwatch_metric_alarm" "master_read_latency_high" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
   }
@@ -244,7 +244,7 @@ resource "aws_cloudwatch_metric_alarm" "master_write_latency_high" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
   }
@@ -265,7 +265,7 @@ resource "aws_cloudwatch_metric_alarm" "master_transaction_logs_disk_usage_high"
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
   }
@@ -287,7 +287,7 @@ resource "aws_cloudwatch_metric_alarm" "master_transaction_logs_generation_high"
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
   }
@@ -308,7 +308,7 @@ resource "aws_cloudwatch_metric_alarm" "master_maximum_used_transaction_ids_high
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
   }
@@ -331,7 +331,7 @@ resource "aws_cloudwatch_metric_alarm" "master_write_iops" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -369,7 +369,7 @@ resource "aws_cloudwatch_metric_alarm" "master_write_throughput" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -407,7 +407,7 @@ resource "aws_cloudwatch_metric_alarm" "master_write_latency" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -445,7 +445,7 @@ resource "aws_cloudwatch_metric_alarm" "master_read_iops" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -483,7 +483,7 @@ resource "aws_cloudwatch_metric_alarm" "master_read_throughput" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -521,7 +521,7 @@ resource "aws_cloudwatch_metric_alarm" "master_read_latency" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -559,7 +559,7 @@ resource "aws_cloudwatch_metric_alarm" "master_db_load_cpu" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -597,7 +597,7 @@ resource "aws_cloudwatch_metric_alarm" "master_db_load_non_cpu" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -635,7 +635,7 @@ resource "aws_cloudwatch_metric_alarm" "master_db_load" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -673,7 +673,7 @@ resource "aws_cloudwatch_metric_alarm" "master_checkpoint_lag" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -711,7 +711,7 @@ resource "aws_cloudwatch_metric_alarm" "master_cpu_utilization_anomaly" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -749,7 +749,7 @@ resource "aws_cloudwatch_metric_alarm" "master_oldest_replication_slot_lag" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -787,7 +787,7 @@ resource "aws_cloudwatch_metric_alarm" "master_db_connections" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -825,7 +825,7 @@ resource "aws_cloudwatch_metric_alarm" "master_freeable_memory" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -863,7 +863,7 @@ resource "aws_cloudwatch_metric_alarm" "master_swap_usage" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -901,7 +901,7 @@ resource "aws_cloudwatch_metric_alarm" "master_free_storage_space" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -939,7 +939,7 @@ resource "aws_cloudwatch_metric_alarm" "master_disk_queue_depth" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -977,7 +977,7 @@ resource "aws_cloudwatch_metric_alarm" "master_network_transmit_throughput" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1015,7 +1015,7 @@ resource "aws_cloudwatch_metric_alarm" "master_network_receive_throughput" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1053,7 +1053,7 @@ resource "aws_cloudwatch_metric_alarm" "master_transaction_logs_generation" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"

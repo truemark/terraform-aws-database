@@ -121,3 +121,31 @@ variable "tags" {
   description = "Tags to be added to all resources."
   type        = map(string)
 }
+
+variable "treat_missing_data" {
+  description = "How the alarms handle missing data points. Valid values are breaching, notBreaching, ignore and missing."
+  type        = string
+  default     = "breaching"
+
+  validation {
+    condition     = contains(["breaching", "notBreaching", "ignore", "missing"], var.treat_missing_data)
+    error_message = "treat_missing_data must be one of breaching, notBreaching, ignore or missing."
+  }
+}
+
+variable "instance_event_categories" {
+  description = "Event categories for the db-instance event subscription. An empty list subscribes to all categories."
+  type        = list(string)
+  default = [
+    "availability",
+    "deletion",
+    "failover",
+    "failure",
+    "low storage",
+    "maintenance",
+    "notification",
+    "read replica",
+    "recovery",
+    "restoration",
+  ]
+}

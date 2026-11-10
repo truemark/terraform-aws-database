@@ -67,6 +67,30 @@ variable "disk_queue_data_points_to_alarm" {
   default     = 10
 }
 
+variable "cpu_utilization_data_points_to_alarm" {
+  description = "The number of datapoints that must be breaching to trigger the alarm. Leave null to let CloudWatch use evaluation_periods."
+  type        = number
+  default     = null
+}
+
+variable "freeable_memory_data_points_to_alarm" {
+  description = "The number of datapoints that must be breaching to trigger the alarm. Leave null to let CloudWatch use evaluation_periods."
+  type        = number
+  default     = null
+}
+
+variable "free_storage_space_data_points_to_alarm" {
+  description = "The number of datapoints that must be breaching to trigger the alarm. Leave null to let CloudWatch use evaluation_periods."
+  type        = number
+  default     = null
+}
+
+variable "swap_usage_data_points_to_alarm" {
+  description = "The number of datapoints that must be breaching to trigger the alarm. Leave null to let CloudWatch use evaluation_periods."
+  type        = number
+  default     = null
+}
+
 variable "disk_queue_depth_threshold" {
   description = "The maximum number of outstanding IOs (read/write requests) waiting to access the disk."
   type        = number
@@ -152,4 +176,46 @@ variable "database_connections_data_points_to_alarm" {
 variable "sns_topic_name" {
   description = "The name of the SNS topic to publish alerts to."
   type        = string
+}
+
+variable "treat_missing_data" {
+  description = "How the alarms handle missing data points. Valid values are breaching, notBreaching, ignore and missing."
+  type        = string
+  default     = "breaching"
+
+  validation {
+    condition     = contains(["breaching", "notBreaching", "ignore", "missing"], var.treat_missing_data)
+    error_message = "treat_missing_data must be one of breaching, notBreaching, ignore or missing."
+  }
+}
+
+variable "instance_event_categories" {
+  description = "Event categories for the db-instance event subscription. An empty list subscribes to all categories."
+  type        = list(string)
+  default = [
+    "availability",
+    "deletion",
+    "failover",
+    "failure",
+    "low storage",
+    "maintenance",
+    "notification",
+    "read replica",
+    "recovery",
+    "restoration",
+  ]
+}
+
+variable "cluster_event_categories" {
+  description = "Event categories for the db-cluster event subscription. An empty list subscribes to all categories."
+  type        = list(string)
+  default = [
+    "configuration change",
+    "deletion",
+    "failure",
+    "failover",
+    "global-failover",
+    "maintenance",
+    "notification",
+  ]
 }

@@ -18,7 +18,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_cpu_utilization_high" {
   alarm_actions             = [data.aws_sns_topic.topic.arn]
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   tags                      = var.tags
   dimensions = {
     DBInstanceIdentifier = var.replica_db_instance_id
@@ -39,7 +39,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_db_connections_high" {
   alarm_actions             = [data.aws_sns_topic.topic.arn]
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   tags                      = var.tags
   dimensions = {
     DBInstanceIdentifier = var.replica_db_instance_id
@@ -60,7 +60,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_disk_queue_depth_high" {
   alarm_actions             = [data.aws_sns_topic.topic.arn]
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   tags                      = var.tags
   dimensions = {
     DBInstanceIdentifier = var.replica_db_instance_id
@@ -82,7 +82,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_freeable_memory_low" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.replica_db_instance_id
   }
@@ -122,7 +122,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_swap_usage_high" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.replica_db_instance_id
   }
@@ -143,7 +143,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_local_storage_pct_low" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     rds-instance = var.replica_db_instance_id
   }
@@ -164,7 +164,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_lag_high" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.replica_db_instance_id
   }
@@ -185,7 +185,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_read_iops_high" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.replica_db_instance_id
   }
@@ -206,7 +206,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_write_iops_high" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.replica_db_instance_id
   }
@@ -227,7 +227,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_read_latency_high" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.replica_db_instance_id
   }
@@ -248,7 +248,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_write_latency_high" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.replica_db_instance_id
   }
@@ -269,7 +269,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_transaction_logs_disk_usage_high
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.replica_db_instance_id
   }
@@ -290,7 +290,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_maximum_used_transaction_ids_hig
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.replica_db_instance_id
   }
@@ -311,7 +311,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_write_iops" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -349,7 +349,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_write_throughput" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -387,7 +387,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_write_latency" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -425,7 +425,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_read_iops" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -463,7 +463,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_read_throughput" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -501,7 +501,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_read_latency" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -539,7 +539,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_db_load_cpu" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -577,7 +577,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_db_load_non_cpu" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -615,7 +615,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_db_load" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -653,7 +653,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_checkpoint_lag" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -691,7 +691,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_cpu_utilization_anomaly" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -729,7 +729,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_db_connections_anomaly" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -767,7 +767,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_db_load_anomaly" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -805,7 +805,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_db_load_cpu_anomaly" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -843,7 +843,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_db_non_load_cpu_anomaly" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -881,7 +881,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_disk_queue_depth_anomaly" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -919,7 +919,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_freeable_memory_anomaly" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -957,7 +957,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_free_storage_space_anomaly" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -995,7 +995,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_maximum_used_transaction_ids" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1033,7 +1033,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_network_receive_throughput_anoma
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1071,7 +1071,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_network_transmit_throughput_anom
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1109,7 +1109,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_read_iops_anomaly" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1147,7 +1147,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_read_latency_anomaly" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1185,7 +1185,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_read_throughput_anomaly" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1223,7 +1223,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_swap_usage_anomaly" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1261,7 +1261,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_transaction_logs_generation_anom
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1299,7 +1299,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_transaction_logs_disk_usage_anom
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1337,7 +1337,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_write_iops_anomaly" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1375,7 +1375,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_write_latency_anomaly" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1413,7 +1413,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_write_throughput_anomaly" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1453,7 +1453,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_checkpoint_lag_high" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.replica_db_instance_id
   }
@@ -1472,7 +1472,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_oldest_replication_slot_lag" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1510,7 +1510,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_db_connections" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1548,7 +1548,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_freeable_memory" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1586,7 +1586,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_swap_usage" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1624,7 +1624,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_free_storage_space" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1662,7 +1662,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_disk_queue_depth" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1700,7 +1700,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_network_transmit_throughput" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1738,7 +1738,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_network_receive_throughput" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
@@ -1776,7 +1776,7 @@ resource "aws_cloudwatch_metric_alarm" "replica_transaction_logs_generation" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
   threshold_metric_id       = "e1"
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
 
   metric_query {
     id          = "e1"
