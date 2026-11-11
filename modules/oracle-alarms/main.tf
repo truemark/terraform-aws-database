@@ -94,6 +94,7 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_low" {
   alarm_description   = "Average database free storage space low"
   alarm_actions       = [data.aws_sns_topic.topic.arn]
   ok_actions          = [data.aws_sns_topic.topic.arn]
+  treat_missing_data  = var.treat_missing_data
   tags                = var.tags
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
