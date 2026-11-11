@@ -111,78 +111,23 @@ data "aws_iam_policy_document" "logs_to_cloudwatch" {
 
 locals {
   thresholds = {
-    CPUUtilizationEvaluationPeriods    = min(max(var.cpu_utilization_evaluation_periods, 0), 100)
-    CPUUtilizationThreshold            = min(max(var.cpu_utilization_threshold, 0), 100)
-    DiskQueueDepthEvaluationPeriods    = max(var.disk_queue_depth_evaluation_periods, 0)
-    DiskQueueDepthThreshold            = max(var.disk_queue_depth_threshold, 0)
-    DiskQueueDataPointsToAlarm         = var.disk_queue_data_points_to_alarm
-    CPUUtilizationDataPointsToAlarm    = var.cpu_utilization_data_points_to_alarm
-    FreeableMemoryDataPointsToAlarm    = var.freeable_memory_data_points_to_alarm
-    FreeStorageSpaceDataPointsToAlarm  = var.free_storage_space_data_points_to_alarm
-    SwapUsageDataPointsToAlarm         = var.swap_usage_data_points_to_alarm
-    FreeableMemoryEvaluationPeriods    = max(var.disk_queue_depth_evaluation_periods, 0)
-    FreeableMemoryThreshold            = max(var.freeable_memory_threshold, 0)
-    PercentFreeMemoryEvaluationPeriods = max(var.percent_free_memory_evaluation_periods, 0)
-    PercentFreeMemoryThreshold         = max(var.percent_free_memory_threshold, 0)
-    FreeStorageSpaceThreshold          = max(var.free_storage_space_threshold, 0)
-    SwapUsageThreshold                 = max(var.swap_usage_threshold, 0)
-    SwapUsageEvaluationPeriods         = max(var.swap_usage_evaluation_periods, 0)
+    CPUUtilizationEvaluationPeriods   = min(max(var.cpu_utilization_evaluation_periods, 0), 100)
+    CPUUtilizationThreshold           = min(max(var.cpu_utilization_threshold, 0), 100)
+    DiskQueueDepthEvaluationPeriods   = max(var.disk_queue_depth_evaluation_periods, 0)
+    DiskQueueDepthThreshold           = max(var.disk_queue_depth_threshold, 0)
+    DiskQueueDataPointsToAlarm        = var.disk_queue_data_points_to_alarm
+    CPUUtilizationDataPointsToAlarm   = var.cpu_utilization_data_points_to_alarm
+    FreeableMemoryDataPointsToAlarm   = var.freeable_memory_data_points_to_alarm
+    FreeStorageSpaceDataPointsToAlarm = var.free_storage_space_data_points_to_alarm
+    SwapUsageDataPointsToAlarm        = var.swap_usage_data_points_to_alarm
+    FreeableMemoryEvaluationPeriods   = max(var.freeable_memory_evaluation_periods, 1)
+    FreeableMemoryThreshold           = max(var.freeable_memory_threshold, 0)
+    FreeStorageSpaceEvaluationPeriods = max(var.free_storage_space_evaluation_periods, 1)
+    FreeStorageSpaceThreshold         = max(var.free_storage_space_threshold, 0)
+    SwapUsageThreshold                = max(var.swap_usage_threshold, 0)
+    SwapUsageEvaluationPeriods        = max(var.swap_usage_evaluation_periods, 0)
   }
 }
-
-# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm#example-with-an-expression
-# resource "aws_cloudwatch_metric_alarm" "percent_free_memory_low" {
-#   for_each                  = var.db_cluster_members
-#   alarm_name                = "${each.key}_percent_free_memory_low"
-#   actions_enabled           = var.enable_percent_free_memory_low_alarm
-#   comparison_operator       = "GreaterThanThreshold"
-#   evaluation_periods        = local.thresholds["PercentFreeMemoryEvaluationPeriods"]
-#   threshold                 = local.thresholds["PercentFreeMemoryThreshold"]
-#   alarm_description         = "Percent of freeable memory is low."
-#   alarm_actions             = [data.aws_sns_topic.notification_topic.arn]
-#   ok_actions                = [data.aws_sns_topic.notification_topic.arn]
-#   insufficient_data_actions = [data.aws_sns_topic.notification_topic.arn]
-#   treat_missing_data        = "breaching"
-#   tags                      = var.tags
-#
-#   metric_query {
-#     id          = "e1"
-#     expression  = "m2/(m1*1024)*100"
-#     label       = "% Freeable Memory"
-#     return_data = "true"
-#   }
-#
-#   metric_query {
-#     id = "m2"
-#
-#     metric {
-#       metric_name = "FreeableMemory"
-#       namespace   = "AWS/RDS"
-#       period      = "60"
-#       stat        = "Minimum"
-#       unit        = "Bytes"
-#       dimensions = {
-#         "rds-instance" = "${each.key}"
-#       }
-#     }
-#   }
-#
-#   metric_query {
-#     id = "m1"
-#
-#     metric {
-#       metric_name = "RDS-total-memory"
-#       namespace   = "YL"
-#       period      = "60"
-#       stat        = "Maximum"
-#       unit        = "Kilobytes"
-#       dimensions = {
-#         "rds-instance" = "${each.key}"
-#       }
-#     }
-#   }
-#
-# }
 
 resource "aws_cloudwatch_metric_alarm" "cpu_utilization_high" {
   for_each                  = var.db_cluster_members
@@ -235,7 +180,7 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory_low" {
   alarm_name                = "${each.key}_freeable_memory_low"
   actions_enabled           = var.enable_freeable_memory_low_alarm
   comparison_operator       = "LessThanThreshold"
-  evaluation_periods        = "1"
+  evaluation_periods        = local.thresholds["FreeableMemoryEvaluationPeriods"]
   metric_name               = "FreeableMemory"
   namespace                 = "AWS/RDS"
   period                    = "60"
@@ -258,7 +203,7 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_low" {
   alarm_name          = "${each.key}_free_storage_space_low"
   actions_enabled     = var.enable_free_storage_space_low_alarm
   comparison_operator = "LessThanThreshold"
-  evaluation_periods  = "1"
+  evaluation_periods  = local.thresholds["FreeStorageSpaceEvaluationPeriods"]
   metric_name         = "FreeLocalStorage"
   namespace           = "AWS/RDS"
   period              = "60"

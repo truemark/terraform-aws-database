@@ -25,12 +25,6 @@ variable "cpu_utilization_evaluation_periods" {
   default     = 5
 }
 
-variable "enable_percent_free_memory_low_alarm" {
-  description = "Toggle to create percent_free_memory_low alarm."
-  type        = bool
-  default     = true
-}
-
 variable "enable_cpu_utilization_high_alarm" {
   description = "Toggle to create cpu_utilization_high alarm."
   type        = bool
@@ -110,9 +104,9 @@ variable "freeable_memory_threshold" {
 }
 
 variable "freeable_memory_evaluation_periods" {
-  description = "The number of periods threshold must be breached to alarm."
+  description = "The number of periods threshold must be breached to alarm. Must be greater than or equal to freeable_memory_data_points_to_alarm."
   type        = number
-  default     = 5
+  default     = 1
 }
 
 variable "free_storage_space_threshold" {
@@ -121,6 +115,12 @@ variable "free_storage_space_threshold" {
   default     = 2000000000
 
   # 2 Gigabyte in Byte
+}
+
+variable "free_storage_space_evaluation_periods" {
+  description = "The number of periods threshold must be breached to alarm. Must be greater than or equal to free_storage_space_data_points_to_alarm."
+  type        = number
+  default     = 1
 }
 
 variable "swap_usage_threshold" {
@@ -132,18 +132,6 @@ variable "swap_usage_threshold" {
 }
 
 variable "swap_usage_evaluation_periods" {
-  description = "The number of periods threshold must be breached to alarm."
-  type        = number
-  default     = 5
-}
-
-variable "percent_free_memory_threshold" {
-  description = "The percent of memory that is unused."
-  type        = number
-  default     = 10
-}
-
-variable "percent_free_memory_evaluation_periods" {
   description = "The number of periods threshold must be breached to alarm."
   type        = number
   default     = 5
