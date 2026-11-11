@@ -10,22 +10,11 @@ locals {
 #------------------------------------------------------------------------------
 # Generate an rds instance event sub that publishes to the sns topic.
 resource "aws_db_event_subscription" "instance_sub" {
-  name        = "${var.db_instance_id}-instances"
-  sns_topic   = data.aws_sns_topic.topic.arn
-  source_type = "db-instance"
-  source_ids  = compact([var.db_instance_id, var.replica_db_instance_id != "" ? var.replica_db_instance_id : null])
-  event_categories = [
-    "availability",
-    "deletion",
-    "failover",
-    "failure",
-    "low storage",
-    "maintenance",
-    "notification",
-    "read replica",
-    "recovery",
-    "restoration",
-  ]
-  tags = var.tags
+  name             = "${var.db_instance_id}-instances"
+  sns_topic        = data.aws_sns_topic.topic.arn
+  source_type      = "db-instance"
+  source_ids       = compact([var.db_instance_id, var.replica_db_instance_id != "" ? var.replica_db_instance_id : null])
+  event_categories = var.instance_event_categories
+  tags             = var.tags
 }
 

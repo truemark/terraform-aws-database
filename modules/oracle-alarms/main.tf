@@ -12,18 +12,7 @@ resource "aws_db_event_subscription" "instance_sub" {
   source_ids  = [var.db_instance_id]
   tags        = var.tags
 
-  event_categories = [
-    "availability",
-    "deletion",
-    "failover",
-    "failure",
-    "low storage",
-    "maintenance",
-    "notification",
-    "read replica",
-    "recovery",
-    "restoration"
-  ]
+  event_categories = var.instance_event_categories
 }
 
 #------------------------------------------------------------------------------
@@ -43,7 +32,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_high" {
   alarm_actions             = [data.aws_sns_topic.topic.arn]
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   tags                      = var.tags
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
@@ -64,7 +53,7 @@ resource "aws_cloudwatch_metric_alarm" "disk_queue_depth_high" {
   alarm_actions             = [data.aws_sns_topic.topic.arn]
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   tags                      = var.tags
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
@@ -86,7 +75,7 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory_low" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
   }
@@ -105,6 +94,7 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_low" {
   alarm_description   = "Average database free storage space low"
   alarm_actions       = [data.aws_sns_topic.topic.arn]
   ok_actions          = [data.aws_sns_topic.topic.arn]
+  treat_missing_data  = var.treat_missing_data
   tags                = var.tags
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
@@ -127,7 +117,7 @@ resource "aws_cloudwatch_metric_alarm" "swap_usage_high" {
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
   tags                      = var.tags
-  treat_missing_data        = "breaching"
+  treat_missing_data        = var.treat_missing_data
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
   }

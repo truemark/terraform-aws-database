@@ -25,12 +25,6 @@ variable "cpu_utilization_evaluation_periods" {
   default     = 5
 }
 
-variable "enable_percent_free_memory_low_alarm" {
-  description = "Toggle to create percent_free_memory_low alarm."
-  type        = bool
-  default     = true
-}
-
 variable "enable_cpu_utilization_high_alarm" {
   description = "Toggle to create cpu_utilization_high alarm."
   type        = bool
@@ -67,6 +61,30 @@ variable "disk_queue_data_points_to_alarm" {
   default     = 10
 }
 
+variable "cpu_utilization_data_points_to_alarm" {
+  description = "The number of datapoints that must be breaching to trigger the alarm. Leave null to let CloudWatch use evaluation_periods."
+  type        = number
+  default     = null
+}
+
+variable "freeable_memory_data_points_to_alarm" {
+  description = "The number of datapoints that must be breaching to trigger the alarm. Leave null to let CloudWatch use evaluation_periods."
+  type        = number
+  default     = null
+}
+
+variable "free_storage_space_data_points_to_alarm" {
+  description = "The number of datapoints that must be breaching to trigger the alarm. Leave null to let CloudWatch use evaluation_periods."
+  type        = number
+  default     = null
+}
+
+variable "swap_usage_data_points_to_alarm" {
+  description = "The number of datapoints that must be breaching to trigger the alarm. Leave null to let CloudWatch use evaluation_periods."
+  type        = number
+  default     = null
+}
+
 variable "disk_queue_depth_threshold" {
   description = "The maximum number of outstanding IOs (read/write requests) waiting to access the disk."
   type        = number
@@ -86,9 +104,9 @@ variable "freeable_memory_threshold" {
 }
 
 variable "freeable_memory_evaluation_periods" {
-  description = "The number of periods threshold must be breached to alarm."
+  description = "The number of periods threshold must be breached to alarm. Must be greater than or equal to freeable_memory_data_points_to_alarm."
   type        = number
-  default     = 5
+  default     = 1
 }
 
 variable "free_storage_space_threshold" {
@@ -97,6 +115,12 @@ variable "free_storage_space_threshold" {
   default     = 2000000000
 
   # 2 Gigabyte in Byte
+}
+
+variable "free_storage_space_evaluation_periods" {
+  description = "The number of periods threshold must be breached to alarm. Must be greater than or equal to free_storage_space_data_points_to_alarm."
+  type        = number
+  default     = 1
 }
 
 variable "swap_usage_threshold" {
@@ -108,18 +132,6 @@ variable "swap_usage_threshold" {
 }
 
 variable "swap_usage_evaluation_periods" {
-  description = "The number of periods threshold must be breached to alarm."
-  type        = number
-  default     = 5
-}
-
-variable "percent_free_memory_threshold" {
-  description = "The percent of memory that is unused."
-  type        = number
-  default     = 10
-}
-
-variable "percent_free_memory_evaluation_periods" {
   description = "The number of periods threshold must be breached to alarm."
   type        = number
   default     = 5
@@ -152,4 +164,52 @@ variable "database_connections_data_points_to_alarm" {
 variable "sns_topic_name" {
   description = "The name of the SNS topic to publish alerts to."
   type        = string
+}
+
+variable "treat_missing_data" {
+  description = "How the alarms handle missing data points. Valid values are breaching, notBreaching, ignore and missing."
+  type        = string
+  default     = "breaching"
+
+  validation {
+    condition     = contains(["breaching", "notBreaching", "ignore", "missing"], var.treat_missing_data)
+    error_message = "treat_missing_data must be one of breaching, notBreaching, ignore or missing."
+  }
+}
+
+variable "enable_insufficient_data_actions" {
+  description = "Publish to the SNS topic when an alarm enters the INSUFFICIENT_DATA state. Set to false to avoid notifications when an instance stops publishing metrics, such as when the cluster is stopped. Note that when treat_missing_data is breaching, missing data drives alarms to ALARM rather than INSUFFICIENT_DATA, so this has little effect."
+  type        = bool
+  default     = true
+}
+
+variable "instance_event_categories" {
+  description = "Event categories for the db-instance event subscription. An empty list subscribes to all categories."
+  type        = list(string)
+  default = [
+    "availability",
+    "deletion",
+    "failover",
+    "failure",
+    "low storage",
+    "maintenance",
+    "notification",
+    "read replica",
+    "recovery",
+    "restoration",
+  ]
+}
+
+variable "cluster_event_categories" {
+  description = "Event categories for the db-cluster event subscription. An empty list subscribes to all categories."
+  type        = list(string)
+  default = [
+    "configuration change",
+    "deletion",
+    "failure",
+    "failover",
+    "global-failover",
+    "maintenance",
+    "notification",
+  ]
 }
