@@ -177,6 +177,12 @@ variable "treat_missing_data" {
   }
 }
 
+variable "enable_insufficient_data_actions" {
+  description = "Publish to the SNS topic when an alarm enters the INSUFFICIENT_DATA state. Set to false to avoid notifications when an instance stops publishing metrics, such as when the cluster is stopped. Note that when treat_missing_data is breaching, missing data drives alarms to ALARM rather than INSUFFICIENT_DATA, so this has little effect."
+  type        = bool
+  default     = true
+}
+
 variable "instance_event_categories" {
   description = "Event categories for the db-instance event subscription. An empty list subscribes to all categories."
   type        = list(string)

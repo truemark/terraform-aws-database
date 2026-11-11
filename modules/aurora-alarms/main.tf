@@ -143,7 +143,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_high" {
   alarm_description         = "Average database CPU utilization too high"
   alarm_actions             = [data.aws_sns_topic.notification_topic.arn]
   ok_actions                = [data.aws_sns_topic.notification_topic.arn]
-  insufficient_data_actions = [data.aws_sns_topic.notification_topic.arn]
+  insufficient_data_actions = var.enable_insufficient_data_actions ? [data.aws_sns_topic.notification_topic.arn] : []
   treat_missing_data        = var.treat_missing_data
   datapoints_to_alarm       = local.thresholds["CPUUtilizationDataPointsToAlarm"]
   tags                      = var.tags
@@ -167,7 +167,7 @@ resource "aws_cloudwatch_metric_alarm" "disk_queue_depth_high" {
   alarm_description         = "Average database disk queue depth too high, performance may suffer"
   alarm_actions             = [data.aws_sns_topic.notification_topic.arn]
   ok_actions                = [data.aws_sns_topic.notification_topic.arn]
-  insufficient_data_actions = [data.aws_sns_topic.notification_topic.arn]
+  insufficient_data_actions = var.enable_insufficient_data_actions ? [data.aws_sns_topic.notification_topic.arn] : []
   treat_missing_data        = var.treat_missing_data
   tags                      = var.tags
   dimensions = {
@@ -189,7 +189,7 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory_low" {
   alarm_description         = "Average database freeable memory too low, performance may suffer"
   alarm_actions             = [data.aws_sns_topic.notification_topic.arn]
   ok_actions                = [data.aws_sns_topic.notification_topic.arn]
-  insufficient_data_actions = [data.aws_sns_topic.notification_topic.arn]
+  insufficient_data_actions = var.enable_insufficient_data_actions ? [data.aws_sns_topic.notification_topic.arn] : []
   tags                      = var.tags
   treat_missing_data        = var.treat_missing_data
   datapoints_to_alarm       = local.thresholds["FreeableMemoryDataPointsToAlarm"]
@@ -199,22 +199,23 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory_low" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "free_storage_space_low" {
-  for_each            = var.db_cluster_members
-  alarm_name          = "${each.key}_free_storage_space_low"
-  actions_enabled     = var.enable_free_storage_space_low_alarm
-  comparison_operator = "LessThanThreshold"
-  evaluation_periods  = local.thresholds["FreeStorageSpaceEvaluationPeriods"]
-  metric_name         = "FreeLocalStorage"
-  namespace           = "AWS/RDS"
-  period              = "60"
-  statistic           = "Average"
-  threshold           = local.thresholds["FreeStorageSpaceThreshold"]
-  alarm_description   = "Average database free storage space low"
-  alarm_actions       = [data.aws_sns_topic.notification_topic.arn]
-  ok_actions          = [data.aws_sns_topic.notification_topic.arn]
-  treat_missing_data  = var.treat_missing_data
-  datapoints_to_alarm = local.thresholds["FreeStorageSpaceDataPointsToAlarm"]
-  tags                = var.tags
+  for_each                  = var.db_cluster_members
+  alarm_name                = "${each.key}_free_storage_space_low"
+  actions_enabled           = var.enable_free_storage_space_low_alarm
+  comparison_operator       = "LessThanThreshold"
+  evaluation_periods        = local.thresholds["FreeStorageSpaceEvaluationPeriods"]
+  metric_name               = "FreeLocalStorage"
+  namespace                 = "AWS/RDS"
+  period                    = "60"
+  statistic                 = "Average"
+  threshold                 = local.thresholds["FreeStorageSpaceThreshold"]
+  alarm_description         = "Average database free storage space low"
+  alarm_actions             = [data.aws_sns_topic.notification_topic.arn]
+  ok_actions                = [data.aws_sns_topic.notification_topic.arn]
+  insufficient_data_actions = var.enable_insufficient_data_actions ? [data.aws_sns_topic.notification_topic.arn] : []
+  treat_missing_data        = var.treat_missing_data
+  datapoints_to_alarm       = local.thresholds["FreeStorageSpaceDataPointsToAlarm"]
+  tags                      = var.tags
   dimensions = {
     DBInstanceIdentifier = each.key
   }
@@ -234,7 +235,7 @@ resource "aws_cloudwatch_metric_alarm" "swap_usage_high" {
   alarm_description         = "Average database swap usage too high, performance may suffer"
   alarm_actions             = [data.aws_sns_topic.notification_topic.arn]
   ok_actions                = [data.aws_sns_topic.notification_topic.arn]
-  insufficient_data_actions = [data.aws_sns_topic.notification_topic.arn]
+  insufficient_data_actions = var.enable_insufficient_data_actions ? [data.aws_sns_topic.notification_topic.arn] : []
   tags                      = var.tags
   treat_missing_data        = var.treat_missing_data
   datapoints_to_alarm       = local.thresholds["SwapUsageDataPointsToAlarm"]
@@ -268,7 +269,7 @@ resource "aws_cloudwatch_metric_alarm" "database_connections_high" {
   alarm_description         = "Database connection count too high, new connections may start being refused"
   alarm_actions             = [data.aws_sns_topic.notification_topic.arn]
   ok_actions                = [data.aws_sns_topic.notification_topic.arn]
-  insufficient_data_actions = [data.aws_sns_topic.notification_topic.arn]
+  insufficient_data_actions = var.enable_insufficient_data_actions ? [data.aws_sns_topic.notification_topic.arn] : []
   tags                      = var.tags
   treat_missing_data        = var.treat_missing_data
   dimensions = {
