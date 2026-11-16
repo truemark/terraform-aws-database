@@ -150,6 +150,13 @@ resource "aws_db_instance" "read_replica" {
   deletion_protection        = var.replica_deletion_protection
   skip_final_snapshot        = true
 
+  # Same story as max_allocated_storage above: not Computed in the provider, so
+  # omitting it means "false", not "leave alone". RDS copies the source
+  # instance's setting at replica creation, so without this every plan proposes
+  # turning Performance Insights back off on the replica.
+  performance_insights_enabled          = coalesce(var.replica_performance_insights_enabled, var.performance_insights_enabled)
+  performance_insights_retention_period = var.performance_insights_retention_period
+
   tags = merge(local.tags, { "yleo:role" = "read-replica" })
 
   timeouts {

@@ -98,3 +98,8 @@ output "read_replica_db_instance_endpoint" {
   description = "The connection endpoint of the read replica, if created"
   value       = try(aws_db_instance.read_replica[0].endpoint, null)
 }
+
+output "read_replica_db_instance_id" {
+  description = "The DB instance identifier of the read replica, if created. This is the value CloudWatch uses for the DBInstanceIdentifier dimension, so it is what the alarms module wants."
+  value       = try(aws_db_instance.read_replica[0].identifier, null)
+}

@@ -344,6 +344,12 @@ variable "replica_max_allocated_storage" {
   default     = null
 }
 
+variable "replica_performance_insights_enabled" {
+  description = "Specifies whether Performance Insights are enabled on the read replica. Defaults to performance_insights_enabled if not set, which matches the value RDS inherits from the source instance at replica creation."
+  type        = bool
+  default     = null
+}
+
 variable "replica_mode" {
   description = "Replica mode for the read replica: 'open-read-only' (queryable, requires Active Data Guard licensing) or 'mounted' (not queryable, DR/promotion only)"
   type        = string

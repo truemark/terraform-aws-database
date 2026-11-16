@@ -114,6 +114,7 @@ module "db" {
   replica_mode                    = "open-read-only" # or "mounted"
   replica_instance_type           = "db.r6i.large"   # defaults to instance_type if unset
   replica_max_allocated_storage   = 1000             # defaults to max_allocated_storage if unset
+  replica_performance_insights_enabled = true        # defaults to performance_insights_enabled if unset
   replica_deletion_protection     = true
   read_replica_creation_delay     = "5m"
 }
@@ -180,6 +181,7 @@ The following parameters are supported:
 - replica_instance_type
 - replica_max_allocated_storage
 - replica_mode
+- replica_performance_insights_enabled
 - security_group_tags
 - skip_final_snapshot
 - snapshot_identifier
