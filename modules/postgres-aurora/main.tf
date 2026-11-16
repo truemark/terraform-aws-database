@@ -3,7 +3,7 @@ locals {
     for n in range(1, var.replica_count + 2) :
     n => merge(
       {
-        #identifier                            = n == 1 ? var.name : "${var.name}-${n}"       
+        #identifier                            = n == 1 ? var.name : "${var.name}-${n}"
         identifier                 = "${var.name}-${n}"
         instance_class             = var.instance_class
         publicly_accessible        = false
@@ -75,7 +75,7 @@ resource "aws_rds_cluster_parameter_group" "db" {
 }
 
 module "db" {
-  # https://registry.terraform.io/modules/terraform-aws-modules/rds-aurora/aws/latest                                          
+  # https://registry.terraform.io/modules/terraform-aws-modules/rds-aurora/aws/latest
   source  = "terraform-aws-modules/rds-aurora/aws"
   version = "10.2.0"
 
@@ -104,6 +104,7 @@ module "db" {
   preferred_maintenance_window                  = var.preferred_maintenance_window
   security_group_tags                           = var.security_group_tags
   security_group_description                    = var.security_group_description
+  serverlessv2_scaling_configuration            = var.serverlessv2_scaling_configuration
   skip_final_snapshot                           = var.skip_final_snapshot
   snapshot_identifier                           = var.snapshot_identifier
   storage_encrypted                             = true

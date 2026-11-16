@@ -244,6 +244,14 @@ variable "security_group_description" {
   type        = string
   default     = null
 }
+variable "serverlessv2_scaling_configuration" {
+  description = "Aurora Serverless v2 scaling configuration"
+  type = object({
+    min_capacity = number
+    max_capacity = number
+  })
+  default = null
+}
 variable "share" {
   default = false
   type    = bool
