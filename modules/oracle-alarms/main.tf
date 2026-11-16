@@ -64,7 +64,7 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory_low" {
   count                     = var.create_freeable_memory_alarm ? 1 : 0
   alarm_name                = "${var.db_instance_id}_freeable_memory_low"
   comparison_operator       = "LessThanThreshold"
-  evaluation_periods        = "1"
+  evaluation_periods        = local.thresholds["FreeableMemoryEvaluationPeriods"]
   metric_name               = "FreeableMemory"
   namespace                 = "AWS/RDS"
   period                    = "60"
@@ -85,7 +85,7 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_low" {
   count               = var.create_free_storage_space_alarm ? 1 : 0
   alarm_name          = "${var.db_instance_id}_free_storage_space_low"
   comparison_operator = "LessThanThreshold"
-  evaluation_periods  = "1"
+  evaluation_periods  = local.thresholds["FreeStorageSpaceEvaluationPeriods"]
   metric_name         = "FreeStorageSpace"
   namespace           = "AWS/RDS"
   period              = "60"
@@ -106,7 +106,7 @@ resource "aws_cloudwatch_metric_alarm" "swap_usage_high" {
   alarm_name                = "${var.db_instance_id}_swap_usage_high"
   comparison_operator       = "GreaterThanThreshold"
   datapoints_to_alarm       = 1
-  evaluation_periods        = "1"
+  evaluation_periods        = local.thresholds["SwapUsageEvaluationPeriods"]
   metric_name               = "SwapUsage"
   namespace                 = "AWS/RDS"
   period                    = "60"
