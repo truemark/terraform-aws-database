@@ -105,7 +105,7 @@ resource "aws_cloudwatch_metric_alarm" "swap_usage_high" {
   count                     = var.create_swap_usage_alarm ? 1 : 0
   alarm_name                = "${var.db_instance_id}_swap_usage_high"
   comparison_operator       = "GreaterThanThreshold"
-  datapoints_to_alarm       = 1
+  datapoints_to_alarm       = local.thresholds["SwapUsageEvaluationPeriods"]
   evaluation_periods        = local.thresholds["SwapUsageEvaluationPeriods"]
   metric_name               = "SwapUsage"
   namespace                 = "AWS/RDS"
