@@ -29,9 +29,9 @@ variable "db_load_evaluation_periods" {
 }
 
 variable "db_load_treat_missing_data" {
-  description = "How the db_load_high alarm handles missing data points. Defaults to ignore because DBLoad is only published when Performance Insights is enabled. Valid values are breaching, notBreaching, ignore and missing."
+  description = "How the db_load_high alarm handles missing data points. Defaults to notBreaching because DBLoad is only published when Performance Insights is enabled, and missing data should clear the alarm rather than leave it stuck in its current state. Valid values are breaching, notBreaching, ignore and missing."
   type        = string
-  default     = "ignore"
+  default     = "notBreaching"
 
   validation {
     condition     = contains(["breaching", "notBreaching", "ignore", "missing"], var.db_load_treat_missing_data)
