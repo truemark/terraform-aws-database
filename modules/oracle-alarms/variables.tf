@@ -28,6 +28,17 @@ variable "db_load_evaluation_periods" {
   default     = 5
 }
 
+variable "db_load_treat_missing_data" {
+  description = "How the db_load_high alarm handles missing data points. Defaults to ignore because DBLoad is only published when Performance Insights is enabled. Valid values are breaching, notBreaching, ignore and missing."
+  type        = string
+  default     = "ignore"
+
+  validation {
+    condition     = contains(["breaching", "notBreaching", "ignore", "missing"], var.db_load_treat_missing_data)
+    error_message = "db_load_treat_missing_data must be one of breaching, notBreaching, ignore or missing."
+  }
+}
+
 variable "db_load_threshold" {
   description = "The maximum database load (average active sessions) before alarming. A common rule of thumb is to alert above the instance's vCPU count."
   type        = number

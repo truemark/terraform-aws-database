@@ -53,7 +53,7 @@ resource "aws_cloudwatch_metric_alarm" "db_load_high" {
   alarm_actions             = [data.aws_sns_topic.topic.arn]
   ok_actions                = [data.aws_sns_topic.topic.arn]
   insufficient_data_actions = [data.aws_sns_topic.topic.arn]
-  treat_missing_data        = var.treat_missing_data
+  treat_missing_data        = var.db_load_treat_missing_data
   tags                      = var.tags
   dimensions = {
     DBInstanceIdentifier = var.db_instance_id
