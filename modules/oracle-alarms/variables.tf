@@ -16,6 +16,24 @@ variable "create_cpu_utilization_alarm" {
   default     = true
 }
 
+variable "create_db_load_alarm" {
+  description = "Toggle to create db_load_high alarm."
+  type        = bool
+  default     = true
+}
+
+variable "db_load_evaluation_periods" {
+  description = "The number of periods threshold must be breached to alarm."
+  type        = number
+  default     = 5
+}
+
+variable "db_load_threshold" {
+  description = "The maximum database load (average active sessions) before alarming. A common rule of thumb is to alert above the instance's vCPU count."
+  type        = number
+  default     = 4
+}
+
 variable "create_disk_queue_depth_alarm" {
   description = "Toggle to create disk_queue_depth_alarm."
   type        = bool
@@ -30,12 +48,6 @@ variable "create_free_storage_space_alarm" {
 
 variable "create_freeable_memory_alarm" {
   description = "Toggle to create freeable_memory_alarm."
-  type        = bool
-  default     = true
-}
-
-variable "create_percent_free_memory_alarm" {
-  description = "Toggle to create percent_free_memory_alarm."
   type        = bool
   default     = true
 }
@@ -86,18 +98,6 @@ variable "freeable_memory_threshold" {
   description = "The minimum amount of available random access memory in Byte."
   type        = number
   default     = 2147483648 #2GB in bytes
-}
-
-variable "percent_free_memory_evaluation_periods" {
-  description = "The number of periods threshold must be breached to alarm."
-  type        = number
-  default     = 5
-}
-
-variable "percent_free_memory_threshold" {
-  description = "The percent of memory that is unused."
-  type        = number
-  default     = 10
 }
 
 variable "sns_topic_name" {

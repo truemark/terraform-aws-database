@@ -39,6 +39,27 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_high" {
   }
 }
 
+resource "aws_cloudwatch_metric_alarm" "db_load_high" {
+  count                     = var.create_db_load_alarm ? 1 : 0
+  alarm_name                = "${var.db_instance_id}_db_load_high"
+  comparison_operator       = "GreaterThanThreshold"
+  evaluation_periods        = local.thresholds["DBLoadEvaluationPeriods"]
+  metric_name               = "DBLoad"
+  namespace                 = "AWS/RDS"
+  period                    = "60"
+  statistic                 = "Average"
+  threshold                 = local.thresholds["DBLoadThreshold"]
+  alarm_description         = "Average database load (average active sessions) too high, performance may suffer"
+  alarm_actions             = [data.aws_sns_topic.topic.arn]
+  ok_actions                = [data.aws_sns_topic.topic.arn]
+  insufficient_data_actions = [data.aws_sns_topic.topic.arn]
+  treat_missing_data        = var.treat_missing_data
+  tags                      = var.tags
+  dimensions = {
+    DBInstanceIdentifier = var.db_instance_id
+  }
+}
+
 resource "aws_cloudwatch_metric_alarm" "disk_queue_depth_high" {
   count                     = var.create_disk_queue_depth_alarm ? 1 : 0
   alarm_name                = "${var.db_instance_id}_disk_queue_depth_high"
